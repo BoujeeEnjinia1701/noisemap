@@ -1,5 +1,14 @@
 item,qty,spec,supplier,unit_cost_usd,make_buy,notes
-MEMS microphone with on-device A-weighted level calculation,,,,,,
-FieldNode core,,,,,,
-Windscreen,,,,,,
-Pole mount,,,,,,
+1 FieldNode enclosure,1,"IP65 light grey polycarbonate box about 200 x 150 x 90 mm with membrane vent and cable gland (FieldNode standard)",FieldNode project; electrical distributor,20.00,buy,Indicative price; FieldNode core line
+2 FieldNode power and radio board,1,"MPPT charger with cold-charge lockout, STM32WL-class LoRaWAN module, 16 MB SPI flash, switched 3.3 V rail, sub-GHz whip antenna, two M12 sensor ports",FieldNode project,62.00,make,Indicative price; FieldNode core line (power board, radio module, antenna, ports and plate from the FieldNode BOM)
+3 LiFePO4 cell with fused holder,1,"32700 LiFePO4, 3.2 V, 6 Ah (about 19 Wh), inline 5 A fuse and NTC",Battery distributor,9.00,buy,Indicative price; FieldNode standard; one cell is enough for NoiseMap (estimate)
+4 Solar panel,1,"6 W monocrystalline, 6 V class, about 290 x 200 x 17 mm, mounted as a sun and rain hood",Solar or electronics distributor,14.00,buy,Indicative price; FieldNode standard
+5 Panel tilt bracket,1,"Aluminium flat bar posts, tilt about 35 degrees",Local make,6.00,make,Indicative material cost; FieldNode standard
+6 Pole mounting kit,1,"Back plate, V-blocks and two stainless band clamps with rubber liners, sized for 60 to 140 mm street poles",Hardware shop plus local make,8.00,make,Indicative price; FieldNode kit fits 40 to 60 mm poles so larger clamps are needed for street poles
+7 Microphone arm,1,"25 mm aluminium tube about 400 mm with saddle plate and its own stainless band clamp",Local metal supplier,10.00,make,Indicative material cost; keeps the microphone about 0.45 m from the pole face
+8 Microphone head housing,1,"3D-printed ASA tube 40 mm OD x 150 mm with drip skirt, top plate with acoustic port and hydrophobic acoustic membrane",Local print,5.00,make,Indicative material cost; membrane effect on response to be measured at TRL 3
+9 MEMS microphone,1,"Digital I2S MEMS microphone breakout, ICS-43434 class (65 dB SNR, 120 dB SPL overload); IM72D128 class as the alternative",Electronics distributor,7.00,buy,Indicative price; ICS-43434 is listed as end of life by TDK so the part choice is proposed awaiting Amish
+10 Level processor,1,"Cortex-M4F class low-power microcontroller board (STM32L4 class) with I2S input and UART output; no external storage",Electronics distributor,8.00,buy,Indicative price; computes A and C weighted levels; audio stays in its RAM
+11 Foam windscreen and bird spike,1,"Open-cell polyurethane foam ball about 90 mm, UV-stabilized, bored to fit the head; stainless bird spike",Acoustic accessory supplier,8.00,buy,Indicative price; replace about yearly (estimate)
+12 Sensor cable,1,"M12 5-pin sealed cable about 1.5 m, FieldNode sensor port pinout, carries 3.3 V and UART",Electronics distributor,8.00,buy,Indicative price
+13 Hardware and consumables,1,"Stainless fasteners, safety lanyard for the arm, UV-stable cable ties, self-amalgamating tape",Local hardware shop,6.00,buy,Indicative price; no exploded-view callout
