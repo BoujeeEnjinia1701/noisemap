@@ -3,7 +3,7 @@ doc_id: NSM-REQ-001
 title: NoiseMap requirements
 project: NoiseMap
 doc_type: Requirements
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -21,11 +21,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: TRL 3; R13 redefined to the NoiseMap parts under NSM-DDR-001 D1; R2 metric set adopted (D5); status column from NSM-CAL-001
+- version: "0.4"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # NoiseMap requirements
 
-These requirements are targets for concept review and must be revised with a co-design partner before the design is frozen. The metric set (R2) and the budget scope (R13) follow NSM-DDR-001 D5 and D1, adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review. Status is taken from the TRL 3 calculation note NSM-CAL-001; "met on paper" means met by calculation only. One requirement is **not met** (R10, mass: 3.32 kg against 3 kg), four are at risk (R3, R4, R5, R12), four can be settled only by test (R8, R9, R11, R14), and six are met on paper or by design.
+These requirements are targets for concept review and must be revised with a co-design partner before the design is frozen. The metric set (R2) and the budget scope (R13) follow NSM-DDR-001 D5 and D1; the relaxed mass limit (R10), the wind flag method (R11) and the interval rule (R12) follow NSM-DDR-002. All were decided by Amish, 2026-09-25: go with recommendation. Status is taken from the TRL 3 calculation note NSM-CAL-001 v0.2; "met on paper" means met by calculation only. None is not met; three are at risk (R3, R4, R5), four can be settled only by test (R8, R9, R11, R14), and eight are met on paper or by design.
 
 Design case: one node on a 114.3 mm street pole 0.45 m behind the curb, microphone 4.0 m above the sidewalk and 0.45 m from the pole face, in a mixed street with traffic by day and bars at night.
 
@@ -42,9 +46,9 @@ Table 1. Requirements.
 | R7 | Energy | Energy neutral at 1.5 peak sun hours; 14 days without sun | Energy budget, bench test | Met on paper (5.81 Wh/day for 0.29 Wh/day; 53 days) |
 | R8 | Ingress and weather | IP65 enclosure; microphone head survives driving rain; -20 °C to +50 °C | Spray test, thermal chamber | Not verifiable at TRL 3 |
 | R9 | Calibration check | Field check with a 94 dB, 1 kHz calibrator in 10 min or less; offset stored on the node | Timed trial | Not verifiable at TRL 3 |
-| R10 | Installation and mass | Two trained people, 45 min, no drilling or pole wiring; 60 to 140 mm poles; 3 kg or less; withstands 35 m/s gusts | Timed trial, weighing, bracket calculation | **Not met** on mass (3.32 kg); wind met on paper; fit met by design; time not verifiable at TRL 3 |
-| R11 | Contaminated data | Intervals with wind above about 5 m/s or heavy rain are flagged | Field comparison with a weather station | Not verifiable at TRL 3: level-based wind flag and server rain flag defined; threshold needs field data |
-| R12 | Radio use | Within EU868 1 % duty cycle and The Things Network fair use (30 s uplink per day) | Airtime calculation | **At risk**: 23.7 s/day at SF9; not met at SF10 (47.4 s) to SF12 without a longer interval |
+| R10 | Installation and mass | Two trained people, 45 min, no drilling or pole wiring; 60 to 140 mm poles; 3.5 kg or less (relaxed from 3 kg, NSM-DDR-002); withstands 35 m/s gusts | Timed trial, weighing, bracket calculation | Met on paper on mass (3.45 kg with pocketed V-blocks and saddle; margin 0.05 kg); wind met on paper; fit met by design; time not verifiable at TRL 3 |
+| R11 | Contaminated data | Intervals with wind above about 5 m/s or heavy rain are flagged, wind by a level-based flag (no added sensor) and rain on the server from weather data (NSM-DDR-002) | Field comparison with a weather station | Not verifiable at TRL 3: method chosen; the threshold needs field data (TRL 4, on hold) |
+| R12 | Radio use | Within EU868 1 % duty cycle and The Things Network fair use (30 s uplink per day); 15-minute interval at SF7 to SF9, lengthened automatically at SF10 to SF12 (NSM-DDR-002) | Airtime calculation | Met on paper: 23.7 s/day at SF9; 29.6, 29.6 and 30.0 s/day at 24, 48 and 87 min for SF10 to SF12 |
 | R13 | Parts cost | NoiseMap parts (lines 7 to 14 of the BOM) $100 or less per node; the FieldNode core is costed in the FieldNode repo and the full node cost is stated | Priced BOM | Met on paper: NoiseMap parts $62.00; full node $188.00 with the $126.00 FieldNode core |
 | R14 | Service life | 5 years outdoors, with a yearly windscreen change and one battery change | Design review, UV-stable materials | Not verifiable at TRL 3 |
 | R15 | Openness | Hardware, firmware, calibration method and data format published under the repo licenses | Design review | Met by design |

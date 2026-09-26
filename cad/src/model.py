@@ -12,7 +12,8 @@ panel facing -X; the microphone arm has its own band clamp and points +X at the 
 site the core turns about the pole to face the equator and the arm turns to face the street;
 the two are independent. Main dimensions and interfaces only: FieldNode core envelope as in
 FND-DWG-001 (enclosure 150 x 90 x 200 mm, 6 W panel at 40 deg, 180 x 320 x 3 mm back plate),
-the street pole adapter for 60 to 140 mm poles, the arm, the head with its acoustic port, the
+the street pole adapter for 60 to 140 mm poles (V-blocks and arm saddle pocketed for
+mass under NSM-DDR-002), the arm, the head with its acoustic port, the
 microphone position and the windscreen. Not fabrication detail; not for fabrication.
 The same PARAMS feed docs/04-calcs/sizing.py (NSM-CAL-001), the drawing NSM-DWG-001
 (cad/src/sheets.py) and the concept media (cad/src/concept_media.py).
@@ -28,6 +29,9 @@ PARAMS = {
     "mic_z": 4000.0, "mic_off": 450.0,
     # 14 street pole adapter: 90 deg V-blocks (face width, depth along X, height), V notch width at the face
     "vb": (110.0, 60.0, 40.0), "vnotch_w": 100.0, "band_w": 12.0, "band_t": 0.8,
+    # mass saving (NSM-DDR-002, O2 option c): V-blocks pocketed from top and bottom leaving walls and a
+    # mid-height web (wall, web); saddle pocketed on the pole side (pocket Y x Z x depth)
+    "pocket": True, "vb_pocket": (4.0, 8.0), "saddle_pocket": (48.0, 78.0, 6.0),
     # FieldNode core (FND-DWG-001): enclosure W (Y) x D (X) x H (Z), bottom height, back plate W x H x t
     "enc": (150.0, 90.0, 200.0), "enc_wall": 3.0, "enc_z0": 3300.0,
     "plate": (180.0, 320.0, 3.0), "plate_drop": 40.0, "clamp_dz": (-20.0, 230.0),
@@ -173,8 +177,18 @@ def build_parts(p=PARAMS):
     for dz in p["clamp_dz"]:
         zc = z0 + dz + p["band_w"] / 2
         blk = b(d["plate_front"], d["plate_front"] + vd, -vw / 2, vw / 2, zc - vh / 2, zc + vh / 2)
-        notch = Pos(d["apex"], 0, zc) * Rot(0, 0, 45) * Box(200, 200, vh + 2)
+        # 90 deg V notch: a square turned 45 deg with one corner on the apex (P2 fix: P1 centred the
+        # square on the apex, which cut the V-block down to a flat 10 mm plate)
+        notch = Pos(d["apex"] + 100 * math.sqrt(2), 0, zc) * Rot(0, 0, 45) * Box(200, 200, vh + 2)
         blk = blk - (notch & b(d["apex"], d["apex"] + 300, -300, 300, zc - vh, zc + vh))
+        if p.get("pocket"):
+            wall, web = p["vb_pocket"]
+            off = d["apex"] - wall * math.sqrt(2)           # V faces offset by the wall thickness
+            for z_a, z_b in ((zc - vh / 2 - 1, zc - web / 2), (zc + web / 2, zc + vh / 2 + 1)):
+                pk = b(d["plate_front"] + wall, d["plate_front"] + vd - wall, -vw / 2 + wall, vw / 2 - wall, z_a, z_b)
+                vn = Pos(off + 100 * math.sqrt(2), 0, zc) * Rot(0, 0, 45) * Box(200, 200, vh + 4)
+                pk = pk - (vn & b(off, off + 300, -300, 300, zc - vh, zc + vh))
+                blk = blk - pk
         band = _band(zc - p["band_w"] / 2, r, p["band_w"], p["band_t"])
         band = band - b(-300, d["plate_front"], -vw / 2, vw / 2, zc - 20, zc + 20)
         tails = b(d["plate_front"] + 2, d["plate_front"] + vd, -vw / 2 - 6, -vw / 2 - 1, zc - 6, zc + 6) \
@@ -187,6 +201,9 @@ def build_parts(p=PARAMS):
     az = d["arm_z"]
     ao, awall = p["arm"]
     saddle = b(r, r + sx, -sy / 2, sy / 2, az - sz / 2, az + sz / 2)
+    if p.get("pocket"):
+        py, pz, pdp = p["saddle_pocket"]
+        saddle = saddle - b(r - 1, r + pdp, -py / 2, py / 2, az - pz / 2, az + pz / 2)
     arm_band = _band(az - p["band_w"] / 2, r, p["band_w"], p["band_t"]) - b(r - 1, 400, -sy / 2, sy / 2, az - 20, az + 20)
     hx = d["head_x"]
     hd, hwall, hh = p["head"]

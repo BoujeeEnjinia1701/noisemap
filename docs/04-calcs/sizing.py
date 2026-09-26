@@ -1,4 +1,4 @@
-"""NoiseMap sizing calculations, NSM-CAL-001 v0.1 (TRL 3).
+"""NoiseMap sizing calculations, NSM-CAL-001 v0.2 (TRL 3).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md; each line carries a tag such as [A3]
@@ -103,9 +103,9 @@ ANEMO_COST, ANEMO_MASS = 25.0, 0.15   # cup anemometer with pulse output (indica
 # Mass densities (g/cm3) and bought-part masses (kg)
 RHO_AL, RHO_ASA, RHO_FOAM = 2.70, 1.07, 0.030
 M_MIC, M_PROC, M_SPIKE, M_CABLE, M_HW = 0.005, 0.010, 0.006, 0.090, 0.050
-MASS_LIMIT = 3.0
+MASS_LIMIT = 3.5          # kg, R10 relaxed from 3.0 kg under NSM-DDR-002 (O2 option c)
 
-print("NoiseMap sizing, NSM-CAL-001 v0.1")
+print("NoiseMap sizing, NSM-CAL-001 v0.2")
 print(f"Geometry from cad/src/model.py: pole {P['pole_od']} mm, microphone {P['mic_z']:.0f} mm up and "
       f"{P['mic_off']:.0f} mm off the pole face, arm {D['arm_len']:.0f} mm, head {P['head']} mm")
 
@@ -254,8 +254,17 @@ for sf in range(7, 13):
     tag("F2", f"SF{sf}: {t * 1e3:.1f} ms per uplink, {t * REPORTS:.1f} s/day at 15 min, shortest interval within "
               f"{TTN_S:.0f} s/day {math.ceil(t * 1440 * 60 / TTN_S / 60)} min, EU868 1 % off-time {t * 99:.0f} s")
 tag("F2b", f"Stored record with a {TS_BYTES}-byte time stamp: {toa(phy + TS_BYTES, 9) * 1e3:.1f} ms at SF9")
-res("R12", f"{air[9] * REPORTS:.1f} s/day at SF9; {air[10] * REPORTS:.1f} s/day at SF10; 1 % duty cycle met at all SF",
-    "EU868 1 % duty cycle and 30 s/day fair use", "At risk (not met at SF10 to SF12 at 15 min without a longer interval)")
+# Interval rule (NSM-DDR-002, O4): the core lengthens the interval automatically at slow data rates so that
+# airtime stays within fair use; 15 min is kept where it fits. The 15 sub-interval LAeq values then span interval/15.
+interval = {sf: max(15, math.ceil(t * 1440 * 60 / TTN_S / 60)) for sf, t in air.items()}
+rule_air = {sf: air[sf] * 1440 / interval[sf] for sf in air}
+for sf in range(7, 13):
+    tag("F2c", f"Interval rule, SF{sf}: {interval[sf]} min, {rule_air[sf]:.1f} s/day, {1440 // interval[sf]} records a day, "
+               f"sub-interval LAeq over {interval[sf] / 15:.1f} min")
+worst_rule = max(rule_air.values())
+res("R12", f"15 min at SF7 to SF9 ({air[9] * REPORTS:.1f} s/day at SF9); interval rule {interval[10]}, {interval[11]} and {interval[12]} min "
+           f"at SF10 to SF12 (at most {worst_rule:.1f} s/day); 1 % duty cycle met at all SF",
+    "EU868 1 % duty cycle and 30 s/day fair use", "Met on paper (with the interval rule of NSM-DDR-002)")
 raw = FS * RAW_BITS
 uart = BAUD * 8 / 10
 lev = FRAME_BYTES * 10
@@ -278,13 +287,14 @@ for u in (2.0, 5.0, 10.0):
     tag("G1", f"{u:g} m/s: unscreened turbulent pressure about {p_turb:.2f} Pa rms, {20 * math.log10(p_turb / 20e-6):.0f} dB, mostly below 20 Hz")
 tag("G2", f"Wind noise scales about as U^4 in power: 2 to 5 m/s adds {40 * math.log10(5 / 2):.1f} dB; "
           f"a 1 m/s error at 5 m/s is {40 * math.log10(6 / 5):.1f} dB of band level")
-res("R11", "Wind: Z weighted band below 40 Hz and its 1 s spread against a threshold set in the field; rain: server flag from weather data",
-    "Flag intervals with wind above 5 m/s or heavy rain", "Not verifiable at TRL 3 (method defined; threshold needs field data)")
+res("R11", "Wind: level-based flag (Z weighted band below 40 Hz and its 1 s spread) against a threshold set in the field; rain: server flag from weather data",
+    "Flag intervals with wind above 5 m/s or heavy rain", "Not verifiable at TRL 3 (method chosen; threshold needs field data, on hold with TRL 4)")
 
 # ---------------------------------------------------------------- H. Mechanics (R10)
 print("\nH. Mechanics")
 parts = {k: s for k, _, s, _, _, _ in build_parts()}
 vol = {k: parts[k].volume / 1e3 for k in parts}
+solid = {k: s for k, _, s, _, _, _ in build_parts({**P, "pocket": False}) if k in ("arm", "adapter")}
 m_add = {
     "arm, saddle and band": vol["arm"] * RHO_AL / 1e3,
     "head housing": vol["head"] * RHO_ASA / 1e3,
@@ -297,9 +307,9 @@ m_add = {
 m_total = FND_MASS + sum(m_add.values())
 tag("H1", "Added to FieldNode: " + "; ".join(f"{k} {v:.3f} kg" for k, v in m_add.items()))
 tag("H2", f"FieldNode core {FND_MASS} kg + NoiseMap {sum(m_add.values()):.2f} kg = {m_total:.2f} kg against {MASS_LIMIT} kg")
-m_saddle = P["saddle"][0] * P["saddle"][1] * P["saddle"][2] / 1e3 * RHO_AL / 1e3
-light = m_total - 0.5 * (m_add["street pole adapter"] + m_saddle)
-tag("H2b", f"With pocketed V-blocks and saddle (half their solid mass): {light:.2f} kg")
+heavy = m_total + sum((solid[k].volume - parts[k].volume) / 1e3 * RHO_AL / 1e3 for k in solid)
+tag("H2b", f"Pocketing saves {heavy - m_total:.3f} kg: V-blocks {(solid['adapter'].volume - parts['adapter'].volume) / 1e6 * RHO_AL:.3f} kg, "
+           f"saddle {(solid['arm'].volume - parts['arm'].volume) / 1e6 * RHO_AL:.3f} kg; solid blocks and saddle would give {heavy:.2f} kg")
 q = 0.5 * RHO * Q_GUST ** 2
 ao, aw = P["arm"][0] / 1e3, P["arm"][1] / 1e3
 L = D["arm_len"] / 1e3
@@ -337,8 +347,11 @@ for dpole in P["pole_range"]:
     band = 1.5 * math.pi * rr + 2 * P["vb"][1]
     tag("H8", f"Pole {dpole:.0f} mm: contact {t:.1f} mm along each V face (face length {D['notch_depth'] * math.sqrt(2):.1f} mm); band about {band:.0f} mm")
 tag("H8b", f"Largest pole the 100 mm V seats: {2 * D['notch_depth'] * math.sqrt(2) * 1:.0f} mm")
-res("R10", f"{m_total:.2f} kg ({light:.2f} kg with pocketed blocks); arm factor {FY_AL / sigma:.0f} on yield; clamp twist factor {cap / twist:.1f}; fits 60 to 140 mm poles",
-    "3 kg or less; 35 m/s gusts; two people in 45 min", f"Not met on mass ({m_total:.2f} kg); wind met on paper; install time not verifiable at TRL 3")
+mass_ok = m_total <= MASS_LIMIT
+res("R10", f"{m_total:.2f} kg with pocketed V-blocks and saddle ({heavy:.2f} kg solid); arm factor {FY_AL / sigma:.0f} on yield; clamp twist factor {cap / twist:.1f}; fits 60 to 140 mm poles",
+    f"{MASS_LIMIT} kg or less; 35 m/s gusts; two people in 45 min",
+    (f"Met on paper on mass ({m_total:.2f} kg, margin {MASS_LIMIT - m_total:.2f} kg)" if mass_ok else f"Not met on mass ({m_total:.2f} kg)")
+    + "; wind met on paper; install time not verifiable at TRL 3")
 
 # ---------------------------------------------------------------- I. Cost (R13)
 print("\nI. Cost")
@@ -350,7 +363,7 @@ budget_usd = yaml.safe_load((ROOT / "project.yaml").read_text())["budget_usd"]
 tag("I1", f"{len(bom)} BOM lines, all priced: FieldNode core (lines 1 to 6) ${core:.2f}; NoiseMap parts (lines 7 to 14) ${own:.2f}; full node ${core + own:.2f}")
 tag("I2", f"Against budget_usd ${budget_usd}: NoiseMap parts {own / budget_usd * 100:.0f} % (margin ${budget_usd - own:.2f}); "
           f"full node ${core + own - budget_usd:.2f} over")
-tag("I3", f"Option with a cup anemometer for R11: NoiseMap parts ${own + ANEMO_COST:.2f}, mass {m_total + ANEMO_MASS:.2f} kg")
+tag("I3", f"Rejected option (NSM-DDR-002, O3) with a cup anemometer for R11: NoiseMap parts ${own + ANEMO_COST:.2f}, mass {m_total + ANEMO_MASS:.2f} kg")
 res("R13", f"NoiseMap parts ${own:.2f}; full node ${core + own:.2f} with the FieldNode core (${core:.2f})",
     f"NoiseMap parts ${budget_usd} or less per node; FieldNode core costed in FieldNode", "Met on paper")
 

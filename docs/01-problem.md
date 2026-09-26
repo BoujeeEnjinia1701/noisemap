@@ -3,7 +3,7 @@ doc_id: NSM-PRB-001
 title: NoiseMap problem statement
 project: NoiseMap
 doc_type: Problem statement
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -21,6 +21,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: TRL 3; budget scope, privacy wording and open questions updated per NSM-DDR-001
+- version: "0.4"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # NoiseMap problem statement
@@ -88,6 +92,6 @@ This design is for communities the author is not part of, so requirements come f
 ## Open questions
 
 - Which partner and street first: a residents' association in a nightlife district, a city noise team or a university? Proposed, awaiting Amish (NSM-DDR-001 O1).
-- 1-minute detail: fifteen 1-minute LAeq values in each 15-minute record. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (NSM-DDR-001 D5).
-- Low-frequency levels for amplified bass: LCeq in each record. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (D5, D12).
-- Public notice: a plate on each pole saying what is measured, with a link to this repository. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (D8).
+- 1-minute detail: fifteen 1-minute LAeq values in each 15-minute record. Decided by Amish, 2026-09-25: go with recommendation (NSM-DDR-001 D5).
+- Low-frequency levels for amplified bass: LCeq in each record. Decided by Amish, 2026-09-25: go with recommendation (D5, D12).
+- Public notice: a plate on each pole saying what is measured, with a link to this repository. Decided by Amish, 2026-09-25: go with recommendation (D8).

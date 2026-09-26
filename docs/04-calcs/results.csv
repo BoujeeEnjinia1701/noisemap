@@ -1,14 +1,14 @@
 id,value,target,status
-R10,3.32 kg (3.10 kg with pocketed blocks); arm factor 24 on yield; clamp twist factor 4.2; fits 60 to 140 mm poles,3 kg or less; 35 m/s gusts; two people in 45 min,Not met on mass (3.32 kg); wind met on paper; install time not verifiable at TRL 3
 R3,Expanded uncertainty 2.9 dB (assumed terms); facade bias up to +2.4 dB before a site correction,+/-2 dB from 40 to 100 dBA after field calibration,At risk
 R4,ICS-43434 34.9 to 113 dBA; IM72D128 27.9 to 113 dBA (AOP assumed),35 to 110 dBA,At risk (no margin at 35 dBA with ICS-43434; met with IM72D128)
 R5,Roll-off -2.8 dB at 63 Hz before equalizing; residual 0.8 dB after; port resonance 36 kHz (+0.4 dB at 8 kHz); membrane and head diffraction unknown,"A and C weighting within class 2 limits, 63 Hz to 8 kHz","At risk (membrane, windscreen and head diffraction not verifiable at TRL 3)"
-R12,23.7 s/day at SF9; 47.4 s/day at SF10; 1 % duty cycle met at all SF,EU868 1 % duty cycle and 30 s/day fair use,At risk (not met at SF10 to SF12 at 15 min without a longer interval)
 R8,"FieldNode IP65 core; head with drip skirt, hydrophobic membrane and bored windscreen; IM72D128 is IP57 at part level",IP65; head survives driving rain; -20 to +50 C,Not verifiable at TRL 3 (by design)
 R9,Calibrator slides over the head after the windscreen is removed; offset stored in the head,Field check in 10 min or less; offset stored,Not verifiable at TRL 3 (timed trial)
-R11,Wind: Z weighted band below 40 Hz and its 1 s spread against a threshold set in the field; rain: server flag from weather data,Flag intervals with wind above 5 m/s or heavy rain,Not verifiable at TRL 3 (method defined; threshold needs field data)
+R11,Wind: level-based flag (Z weighted band below 40 Hz and its 1 s spread) against a threshold set in the field; rain: server flag from weather data,Flag intervals with wind above 5 m/s or heavy rain,"Not verifiable at TRL 3 (method chosen; threshold needs field data, on hold with TRL 4)"
 R14,"ASA housing, UV-stabilized foam changed yearly, FieldNode cell swap",5 years with yearly windscreen and one battery change,Not verifiable at TRL 3
 R7,"5.81 Wh/day stored at 1.5 h against 0.29 Wh/day (0.54 upper bound); 53 days without sun (16 cold, aged, upper bound)",Energy neutral at 1.5 peak sun hours; 14 days without sun,Met on paper
+R10,3.45 kg with pocketed V-blocks and saddle (3.96 kg solid); arm factor 24 on yield; clamp twist factor 4.2; fits 60 to 140 mm poles,3.5 kg or less; 35 m/s gusts; two people in 45 min,"Met on paper on mass (3.45 kg, margin 0.05 kg); wind met on paper; install time not verifiable at TRL 3"
+R12,"15 min at SF7 to SF9 (23.7 s/day at SF9); interval rule 24, 48 and 87 min at SF10 to SF12 (at most 30.0 s/day); 1 % duty cycle met at all SF",EU868 1 % duty cycle and 30 s/day fair use,Met on paper (with the interval rule of NSM-DDR-002)
 R13,NoiseMap parts $62.00; full node $188.00 with the FieldNode core ($126.00),NoiseMap parts $100 or less per node; FieldNode core costed in FieldNode,Met on paper
 R1,"Head has no data storage or radio; firmware sends levels only; cable could carry a speech codec, radio a few minutes a day",No audio stored or sent; head firmware published with a build hash,"Met by design (rests on firmware, not physics)"
 R2,22 bytes per 15 min; wind flag and flagged-minute count in the status byte,"1-minute LAeq, LAeq, LAFmax, LAFmin, L10, L90, LCeq, status per 15 min",Met by design

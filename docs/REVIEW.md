@@ -1,5 +1,52 @@
 # Review note: NoiseMap
 
+## Session 2026-09-25: recommendations accepted
+
+On 2026-09-25 Amish wrote: "i accept all your recommendations, go with them across all repos." Every NoiseMap item with a recommendation is now **decided by Amish, 2026-09-25: go with recommendation**. The decisions are recorded in `docs/decisions/0002-recommendations-accepted.md` (NSM-DDR-002 v0.1), and NSM-DDR-001 is revised to v0.2.
+
+### Decisions applied and what changed
+
+- **D1 to D13** (NSM-DDR-001): status changed from "adopted for TRL 3, open for review" to decided. No further repo change; D1 had already kept `budget_usd` at $100 and redefined R13 to the NoiseMap parts.
+- **O2, R10 mass, option (c)**: V-blocks pocketed from top and bottom (4 mm walls, 8 mm web) and the arm saddle pocketed 6 mm deep in `cad/src/model.py`; R10 relaxed from 3 kg to 3.5 kg. While doing this, a modeling error was found and fixed: the P1 model centered the V notch on the apex, which cut each V-block down to a flat 10 mm plate. With true 90° V-blocks, the solid node would be 3.96 kg; pocketed it is **3.45 kg** (v0.1 figure 3.32 kg). R10 goes from **not met** to **met on paper**, with a margin of only 0.05 kg. STEP and STL re-exported; NSM-DWG-001 Rev P1 to **P2**; BOM lines 7 and 14 describe the pockets (prices unchanged).
+- **O3, wind flag, option (a)**: level-based flag from the Z-weighted band below 40 Hz; rain flagged on the server. No anemometer. R11 stays not verifiable at TRL 3; the field comparison that sets the threshold is TRL 4 work, on hold.
+- **O4, airtime at slow data rates**: the core lengthens the interval automatically, 24 min at SF10, 48 min at SF11, 87 min at SF12, keeping 15 min at SF7 to SF9. Airtime goes from 47.4 s/day at SF10 (over the 30 s limit) to at most 30.0 s/day at every spreading factor. R12 goes from **at risk** to **met on paper**.
+- Budget: `budget_usd` unchanged at $100 (NoiseMap parts $62.00; full node $188.00 with the $126.00 FieldNode core).
+- Pitch and problem: no rewording was recommended, so `project.yaml` pitch and problem are unchanged; `trl_evidence` now lists NSM-DDR-002.
+- Documents: NSM-PRB-001, NSM-PRC-001 and NSM-REQ-001 v0.3 to v0.4; NSM-CAL-001 v0.1 to v0.2 (script and `results.csv` re-run); NSM-DDR-001 v0.1 to v0.2; NSM-DDR-002 v0.1 new. PDFs, drawing and concept media regenerated (footers now designmolecule.com).
+- README: "What sparked the idea" rewritten around the Stratumseind living lab in Eindhoven, whose sound sensors also analyzed voices for aggression ([The Next Web, 2018](https://thenextweb.com/the-next-police/2018/06/08/1128392/); [Galič, 2019](https://www.researchgate.net/publication/333673572_Surveillance_privacy_and_public_space_in_the_Stratumseind_Living_Lab_the_smart_city_debate_beyond_data)); the earlier text about how the idea was chosen is removed. TRL 3 summary and key components updated.
+
+### Requirement status (NSM-CAL-001 v0.2, not met first)
+
+0 not met, 3 at risk, 4 not verifiable at TRL 3, 4 met on paper, 4 met by design (before: 1 not met, 4 at risk, 4 not verifiable, 2 met on paper, 4 met by design).
+
+| ID | Status | Key number |
+| --- | --- | --- |
+| R3 Accuracy | At risk | Expanded uncertainty 2.9 dB on assumed terms; facade bias up to 2.4 dB |
+| R4 Measuring range | At risk | ICS-43434 34.9 to 113 dBA; IM72D128 27.9 to 113 dBA |
+| R5 Frequency weighting | At risk | Membrane, windscreen and head diffraction unknown |
+| R8, R9, R11, R14 | Not verifiable at TRL 3 | Ingress, calibration time, wind threshold, service life |
+| R7, R10, R12, R13 | Met on paper | 53 days without sun; 3.45 kg against 3.5 kg; at most 30.0 s/day airtime; NoiseMap parts $62.00 |
+| R1, R2, R6, R15 | Met by design | R1 rests on firmware (D2) |
+
+### Still awaiting Amish
+
+1. **O1, first co-design partner and street.** No recommendation; stays "Proposed, awaiting Amish".
+
+### Cross-repo actions (not made here)
+
+- FieldNode: a street pole mounting variant for 60 to 140 mm poles (NoiseMap carries its own adapter, BOM line 14); would also serve other pole-mounted siblings.
+- FieldNode: align the automatic interval rule (24, 48, 87 min at SF10 to SF12) with FieldNode's interval item 8, which lives in the FieldNode core firmware.
+- FieldNode: agree the M12 port pinout (FieldNode O2); NoiseMap needs 3.3 V, ground and one UART pair.
+
+### Notes
+
+- The R10 margin is 0.05 kg. Shorter (30 mm) V-blocks, or leaving FieldNode's unused small-pole V-blocks off street-pole nodes, would add margin; suggestions only.
+- In the exploded view the BOM legend runs close to the callouts on the left, as before.
+
+### TRL 4
+
+TRL 4 remains on hold by Amish's instruction. `trl: 3` and `trl_target: 3` are unchanged. No build, test, purchasing, PCB or firmware work was done; the wind threshold field comparison and the class 1 side-by-side are on hold.
+
 ## Session 2026-09-25: TRL 3
 
 On 2026-09-25 Amish asked for this batch of repos to go through the usual process with the instruction "you know the drill, nothing gets past TRL 3". He has not reviewed this repo's TRL 2 items one by one, so every item that carried a recommendation is adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review. This session ran `/advance-trl3` on that basis and stopped at TRL 3.
@@ -35,14 +82,14 @@ Corrections to TRL 2 numbers: load 21 to 12.2 mW; autonomy 30 to 53 days; upper 
 
 ### Decisions recorded (NSM-DDR-001)
 
-Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review: D1 budget covers the NoiseMap parts only, FieldNode core costed in FieldNode (`budget_usd` unchanged at 100; R13 redefined); D2 privacy stated as resting on open firmware, never "by physics"; D3 dual-footprint microphone adapter; D4 processing in the head; D5 15-minute records with 1-minute LAeq and the listed statistics; D6 wind flagging studied (NSM-CAL-001 section G); D7 shared calibrator and one side-by-side per deployment; D8 public notice on each pole; D9 to D12 precis choices (levels only, standard FieldNode core, microphone position, A and C weighting); D13 printed ASA head. No pitch or problem rewording was recommended, so neither changed.
+Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction; now decided by Amish, 2026-09-25: go with recommendation (NSM-DDR-002): D1 budget covers the NoiseMap parts only, FieldNode core costed in FieldNode (`budget_usd` unchanged at 100; R13 redefined); D2 privacy stated as resting on open firmware, never "by physics"; D3 dual-footprint microphone adapter; D4 processing in the head; D5 15-minute records with 1-minute LAeq and the listed statistics; D6 wind flagging studied (NSM-CAL-001 section G); D7 shared calibrator and one side-by-side per deployment; D8 public notice on each pole; D9 to D12 precis choices (levels only, standard FieldNode core, microphone position, A and C weighting); D13 printed ASA head. No pitch or problem rewording was recommended, so neither changed.
 
-### Still awaiting Amish
+### Still awaiting Amish (as of this session; O2 to O4 since decided, see the session above)
 
 1. **O1, first co-design partner and street.** No preference stated.
-2. **O2, R10 mass (new).** Options: (a) pocket the V-blocks and saddle (3.10 kg, still over); (b) relax R10 to 3.5 kg; (c) both. Recommendation: (c). Not applied.
-3. **O3, wind flag method (new).** Options: (a) level-based flag, no cost; (b) cup anemometer on FieldNode's second port (about $25, 0.15 kg). Rain flagged on the server in both. Recommendation: (a), with a field comparison to set the threshold. Not applied.
-4. **O4, airtime at SF10 and slower (new).** Lengthen the interval automatically on The Things Network (24 min at SF10, 87 min at SF12), following FieldNode's item 8. Not applied.
+2. **O2, R10 mass (new).** Options: (a) pocket the V-blocks and saddle (3.10 kg, still over); (b) relax R10 to 3.5 kg; (c) both. Recommendation: (c). Decided by Amish, 2026-09-25: go with recommendation; applied under NSM-DDR-002.
+3. **O3, wind flag method (new).** Options: (a) level-based flag, no cost; (b) cup anemometer on FieldNode's second port (about $25, 0.15 kg). Rain flagged on the server in both. Recommendation: (a), with a field comparison to set the threshold. Decided by Amish, 2026-09-25: go with recommendation; applied under NSM-DDR-002 (field comparison on hold with TRL 4).
+4. **O4, airtime at SF10 and slower (new).** Lengthen the interval automatically on The Things Network (24 min at SF10, 87 min at SF12), following FieldNode's item 8. Decided by Amish, 2026-09-25: go with recommendation; applied under NSM-DDR-002.
 
 ### Cross-repo consistency
 
@@ -109,7 +156,7 @@ Requirements not met or at risk:
 - **R3 (accuracy) at risk:** housing, membrane, windscreen and pole reflections are unverified.
 - **R4 at risk below about 35 dBA** and **R5 at risk below about 60 Hz** (microphone limits).
 
-### Proposed, awaiting Amish
+### Proposed, awaiting Amish (items 1 to 8 since decided by Amish, 2026-09-25: go with recommendation; item 9 still open)
 
 1. **Budget.** Options: (a) raise `budget_usd` to $175; (b) keep $100 and cost the FieldNode core under FieldNode, leaving about $52 of NoiseMap parts, within budget; (c) a cheaper mains or USB powered Wi-Fi variant like DNMS where power exists, which drops the solar and LoRaWAN core. Recommendation: (b), with the full per-node cost of about $171 stated wherever deployment is discussed. `project.yaml` is unchanged.
 2. **Privacy claim.** The cable and radio links are far too slow for raw audio but could in principle carry a heavily compressed speech codec, so the guarantee rests on open head firmware with read-out protection and a published build hash. Recommendation: state it this way in all public copy, and do not claim privacy "by physics".

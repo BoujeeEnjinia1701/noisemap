@@ -1,4 +1,4 @@
-"""NoiseMap general arrangement drawing NSM-DWG-001 (Rev P1).
+"""NoiseMap general arrangement drawing NSM-DWG-001 (Rev P2).
 
 Run from the repo root:  python cad/src/sheets.py
 Builds cad/drawings/NSM-DWG-001.svg, .pdf and .png from the parametric model (cad/src/model.py).
@@ -21,15 +21,17 @@ work = ROOT / "cad/drawings/_views"
 views = project_views(asm, work)
 
 s = Sheet(project="NoiseMap", title="General arrangement, street pole node", dwg_no="NSM-DWG-001",
-          rev="P1", author="Amish Chadha", date="2026-09-25", concept=True,
+          rev="P2", author="Amish Chadha", date="2026-09-25", concept=True,
           material="Arm, saddle, V-blocks 6063 Al; head ASA; bands stainless. See bom/bom.csv",
-          revisions=[("P1", "Preliminary GA from model.py (NSM-CAL-001)", "2026-09-25", "AC")])
+          revisions=[("P1", "Preliminary GA from model.py (NSM-CAL-001)", "2026-09-25", "AC"),
+                     ("P2", "Pocketed V-blocks and saddle; V notch corrected (NSM-DDR-002)", "2026-09-25", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 30, 140, 84, label="Isometric view", sublabel="Not to scale")
 s.add_notes("Key dimensions and interfaces (mm)", [
     f"Microphone port {P['mic_z']:.0f} above sidewalk, {P['mic_off']:.0f} off pole face",
     f"Design pole OD {P['pole_od']}; adapter seats {P['pole_range'][0]:.0f} to {P['pole_range'][1]:.0f}",
-    f"V-blocks {P['vb'][0]:.0f} x {P['vb'][1]:.0f} x {P['vb'][2]:.0f}, 90 deg, {P['vnotch_w']:.0f} opening",
+    f"V-blocks {P['vb'][0]:.0f} x {P['vb'][1]:.0f} x {P['vb'][2]:.0f}, 90 deg, {P['vnotch_w']:.0f} opening,",
+    f"  pocketed: {P['vb_pocket'][0]:.0f} walls, {P['vb_pocket'][1]:.0f} web; saddle pocket {P['saddle_pocket'][2]:.0f} deep",
     f"Arm {P['arm'][0]:.0f} x {P['arm'][1]:.0f} Al tube, {D['arm_len']:.0f} long, own band clamp",
     f"Head {P['head'][0]:.0f} OD x {P['head'][2]:.0f}; port {P['port_d']:.0f} dia x {P['top_t']:.0f}",
     f"Windscreen {P['ws_d']:.0f} foam ball, bore {P['ws_bore']:.0f}; spike {P['spike'][0]:.0f}",
@@ -37,7 +39,7 @@ s.add_notes("Key dimensions and interfaces (mm)", [
     "  6 W panel at 40 deg, back plate 180 x 320 x 3",
     "Core and arm turn independently about the pole",
     "M12 5-pin cable 1.5 m: 3.3 V, GND, UART 9,600 baud",
-    "Mass about 3.3 kg (NSM-CAL-001, R10 not met)",
+    "Mass about 3.45 kg (NSM-CAL-001 v0.2; R10 3.5 kg)",
     "PRELIMINARY, NOT FOR FABRICATION",
 ], x=276, y=128, width=140)
 s.save(ROOT / "cad/drawings/NSM-DWG-001")

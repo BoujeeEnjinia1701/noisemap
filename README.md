@@ -48,7 +48,7 @@ Yet official noise maps are mostly modeled and, in the EU, reviewed only every f
 
 ## What sparked the idea
 
-It came out of a September 2026 review of Design Molecule's applied research areas against the open projects already in the lab. The trigger in the wider world is that open, low-cost noise sensing already works, as the Sensor.Community DNMS project shows ([DNMS](https://github.com/hbitter/DNMS)), but there is still no open, solar-powered street node designed from the start so that it cannot keep or send audio.
+The idea traces back to Stratumseind, a nightlife street in Eindhoven, the Netherlands, which the city, the police and technology firms turned into a living lab. Its sound sensors measured not only levels but "emotions in voices", to spot rising aggression, and the project's director said, "We are not listening in on people or record what they're saying" ([The Next Web, 2018](https://thenextweb.com/the-next-police/2018/06/08/1128392/)). People on the street had to take that on trust, and legal research on the lab argued that such collective sound monitoring can still limit what individuals do, even without identifying anyone ([Galič, 2019](https://www.researchgate.net/publication/333673572_Surveillance_privacy_and_public_space_in_the_Stratumseind_Living_Lab_the_smart_city_debate_beyond_data)). NoiseMap starts from the opposite end: measure loudness only, and publish the firmware so that residents can check the claim instead of trusting it.
 
 ## Problem
 
@@ -60,7 +60,7 @@ A sound level meter node that records decibel levels only, never audio, to map t
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
-TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 34.9 to 113 dBA (27.9 dBA at the low end with the IM72D128 microphone), a 22-byte record every 15 minutes, $62 of NoiseMap parts against the $100 budget and about $188 for a full node with the FieldNode core. The node weighs 3.32 kg, over its 3 kg target, and accuracy, frequency response and airtime at slow data rates are at risk. See the [requirements](docs/03-requirements.md) and the [decision record](docs/decisions/0001-trl2-review-decisions.md).
+TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 34.9 to 113 dBA (27.9 dBA at the low end with the IM72D128 microphone), a 22-byte record every 15 minutes, $62 of NoiseMap parts against the $100 budget and about $188 for a full node with the FieldNode core. With pocketed V-blocks and saddle the node weighs 3.45 kg, within the 3.5 kg of R10 (relaxed from 3 kg), and an automatic interval rule keeps airtime within fair use at slow data rates; accuracy, measuring range and frequency response remain at risk. See the [requirements](docs/03-requirements.md) and the decision records [NSM-DDR-001](docs/decisions/0001-trl2-review-decisions.md) and [NSM-DDR-002](docs/decisions/0002-recommendations-accepted.md).
 
 ## Key components
 
@@ -68,7 +68,7 @@ TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates):
 - Level processor in the head computing A- and C-weighted levels once a second; audio stays in its RAM
 - Standard FieldNode core: IP65 enclosure, 6 W panel, one LiFePO4 cell, MPPT charger and LoRaWAN radio
 - 90 mm foam windscreen with bird spike
-- Aluminum arm with its own band clamp, and a street pole adapter for 60 to 140 mm poles, no drilling
+- Aluminum arm with its own band clamp, and a street pole adapter for 60 to 140 mm poles, no drilling; V-blocks and saddle pocketed for mass
 
 The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
 
@@ -101,4 +101,4 @@ Controlled documents follow the portfolio [documentation standard](.kit/STANDARD
 - **Hardware** (CAD, drawings, BOM, electronics): [CERN-OHL-S v2](LICENSE)
 - **Software** (firmware, scripts, notebooks): [MIT](LICENSE-SOFTWARE)
 
-A project of the [Design Molecule](https://designmolecule.com) lab. Smart cities set.
+A project of the [Design Molecule](https://designmolecule.com) lab.
