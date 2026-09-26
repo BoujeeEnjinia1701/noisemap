@@ -1,9 +1,10 @@
 # BOM notes
 
-Costs are indicative (September 2026 estimates) until suppliers are selected. Line numbers match the callouts in `media/exploded.png`.
+Costs are indicative (September 2026 estimates) until suppliers are selected. Line numbers match the callouts in `media/exploded.png` and the part keys in `cad/src/model.py`. Every line is priced; `docs/04-calcs/sizing.py` reads this file and checks the totals (NSM-CAL-001, section I).
 
-- Total parts cost is about $171 per node, against a `budget_usd` of $100 in `project.yaml`. The budget is unchanged; a change is proposed and awaiting Amish (see `docs/REVIEW.md`).
-- Lines 1 to 6 form the standard FieldNode core, about $119. Their split follows the FieldNode BOM and is an estimate; the FieldNode BOM is the reference. The only change is larger band clamps in line 6 for street poles.
-- Lines 7 to 13 are NoiseMap-specific, about $52.
-- A sound calibrator (94 dB at 1 kHz) is needed to check each node, but it is a shared lab tool and is not in the per-node cost.
+- Lines 1 to 6 are the standard FieldNode core, $126.00, priced exactly as in the FieldNode BOM (FND-CAL-001). Under NSM-DDR-001 D1 (adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review) the core is costed in the FieldNode repo and is outside the NoiseMap budget.
+- Lines 7 to 14 are NoiseMap parts, $62.00, against the $100 `budget_usd`, a margin of $38.00. The full node is $188.00.
+- Line 14, the street pole adapter, is new at TRL 3: FieldNode's V-blocks seat poles up to 71 mm, and street poles are 60 to 140 mm. The small V-blocks and bands stay in the FieldNode core price, so the full node cost is slightly conservative.
+- A cup anemometer for wind flagging (about $25, NSM-DDR-001 O3) is not included.
+- A sound calibrator (94 dB at 1 kHz) is a shared lab tool and is not in the per-node cost (D7).
 - The street pole is not part of the BOM.

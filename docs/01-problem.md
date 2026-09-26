@@ -3,7 +3,7 @@ doc_id: NSM-PRB-001
 title: NoiseMap problem statement
 project: NoiseMap
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (problem, users, context, constraints, prior work, open questions)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: TRL 3; budget scope, privacy wording and open questions updated per NSM-DDR-001
 ---
 
 # NoiseMap problem statement
@@ -48,16 +52,16 @@ Operating context: clamped to an existing street pole with the microphone about 
 
 ## Constraints
 
-- Garage-buildable prototype, about $100 USD in parts per the current budget (the concept estimate of about $171 exceeds this; see NSM-PRC-001 and the review note).
+- Garage-buildable prototype. The $100 budget covers the NoiseMap parts, now $62.00; the FieldNode core is costed in the FieldNode repo ($126.00), so a full node is about $188 (NSM-DDR-001 D1, NSM-CAL-001).
 - Built on the lab's shared **FieldNode** power and radio core, as the FieldNode README lists NoiseMap among its intended users.
-- Privacy by design: no images, audio recordings or personal identifiers leave the device; only sound levels are stored or sent.
+- Privacy by design: no images, audio recordings or personal identifiers leave the device; only sound levels are stored or sent. The guarantee rests on open, auditable head firmware with read-out protection and a published build hash, not on the data links alone (NSM-DDR-001 D2).
 - Clamp-on mounting with no drilling, welding or electrical connection to the pole.
 - Open hardware (CERN-OHL-S-2.0) and open firmware (MIT), so any city or residents' group can audit what the device measures.
 - Measurements should follow the definitions of IEC 61672-1 for sound level meters ([IEC](https://webstore.iec.ch/en/publication/5708)) where practical, but the node is not a certified instrument and must not be presented as one.
 
 ## Prior work
 
-- **Sensor.Community DNMS.** An open Digital Noise Measurement Sensor that reads an ICS-43434 or IM72D128 MEMS microphone over I²S on a Teensy board and reports LAeq, LAmin and LAmax to the Sensor.Community network through an ESP8266 ([DNMS on GitHub](https://github.com/hbitter/DNMS)). It is mains or USB powered and uses Wi-Fi, which suits balconies but not most street poles.
+- **Sensor.Community DNMS.** An open Digital Noise Measurement Sensor that reads an ICS-43434 MEMS microphone over I²S, or an IM72D128 through a PDM to I²S converter, on a Teensy board and reports LAeq, LAmin and LAmax to the Sensor.Community network through an ESP8266 ([DNMS on GitHub](https://github.com/hbitter/DNMS)). It is mains or USB powered and uses Wi-Fi, which suits balconies but not most street poles.
 - **SONYC (Sounds of New York City).** A research network of low-cost acoustic sensors, about $80 in parts each, with 45 deployed in New York when described; it measured sound levels continuously and also sampled encrypted audio clips for machine listening ([Bello et al.](https://arxiv.org/abs/1805.00889)).
 - **Bruitparif Méduse.** A four-microphone sensor used in Paris neighborhoods and on construction sites that measures levels and locates the main source directions several times a second ([Bruitparif](https://www.bruitparif.fr/la-meduse/)).
 - **Certified monitoring terminals.** Class 1 instruments used by agencies and airports; accurate and traceable, but priced for a handful of sites.
@@ -83,7 +87,7 @@ This design is for communities the author is not part of, so requirements come f
 
 ## Open questions
 
-- Which partner and street first: a residents' association in a nightlife district, a city noise team or a university? Proposed, awaiting Amish.
-- Do users need 1-minute detail at night, or are 15-minute statistics enough? Proposed: 1-minute LAeq inside each 15-minute record, awaiting Amish.
-- Should the node report low-frequency (C-weighted) levels for amplified bass from venues? Proposed: yes, as LCeq, awaiting Amish.
-- How should the public be told a node is present and that it cannot record audio (a plate on the pole with a link to this repository)? Proposed, awaiting Amish.
+- Which partner and street first: a residents' association in a nightlife district, a city noise team or a university? Proposed, awaiting Amish (NSM-DDR-001 O1).
+- 1-minute detail: fifteen 1-minute LAeq values in each 15-minute record. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (NSM-DDR-001 D5).
+- Low-frequency levels for amplified bass: LCeq in each record. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (D5, D12).
+- Public notice: a plate on each pole saying what is measured, with a link to this repository. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (D8).

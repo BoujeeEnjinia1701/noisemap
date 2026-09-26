@@ -1,20 +1,20 @@
 # NoiseMap
 
-![TRL 2](https://img.shields.io/badge/TRL-2%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
+![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Smart Cities · **TRL:** 2 of 9 (concept formulated) · **Prototype budget:** about $100 USD · **Difficulty:** 2 of 5
+**Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $100 USD for the NoiseMap parts (FieldNode core costed separately) · **Difficulty:** 2 of 5
 
 A sound level meter node that records decibel levels only, never audio, to map traffic and nightlife noise.
 
 ![NoiseMap concept](media/hero.png)
 
-[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Review note](docs/REVIEW.md)
+[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement NSM-DWG-001 (PDF)](cad/drawings/NSM-DWG-001.pdf) · [Calculations NSM-CAL-001](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
-Most noise disputes turn on one question: how loud was it, and when? A sound level meter answers that with a few numbers per second; it does not need to keep any sound. NoiseMap puts a digital MEMS microphone and a small processor in a head about 4 m above the street, turns the sound into A- and C-weighted levels on the spot, and passes only those levels to the lab's standard FieldNode solar and LoRaWAN core. Because audio never leaves the head, residents, venues and the city can all accept the data without anyone fearing that the street is being listened to.
+Most noise disputes turn on one question: how loud was it, and when? A sound level meter answers that with a few numbers per second; it does not need to keep any sound. NoiseMap puts a digital MEMS microphone and a small processor in a head about 4 m above the street, turns the sound into A- and C-weighted levels on the spot, and passes only those levels to the lab's standard FieldNode solar and LoRaWAN core. The head firmware sends levels only, and it is open and published with a build hash, so residents, venues and the city can check for themselves that the street is not being listened to.
 
-It is open and garage-buildable because the people who most need the evidence, residents' groups and small city noise teams, cannot buy certified monitoring terminals by the dozen. A MEMS microphone, a microcontroller board, a printed housing and a foam windscreen cost about $52 on top of FieldNode, and the open firmware lets anyone check that the node measures levels and nothing else.
+It is open and garage-buildable because the people who most need the evidence, residents' groups and small city noise teams, cannot buy certified monitoring terminals by the dozen. A MEMS microphone, a microcontroller board, a printed housing, a foam windscreen, an arm and a street pole adapter cost about $62 on top of the FieldNode core, and the open firmware lets anyone check that the node measures levels and nothing else.
 
 ## Burning platform
 
@@ -60,23 +60,23 @@ A sound level meter node that records decibel levels only, never audio, to map t
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
-First-order estimates (to be checked at TRL 3): about 21 mW average draw, about 30 days without sun on the standard FieldNode cell, a measuring range of about 35 to 115 dBA, a 22-byte record every 15 minutes, about 2.3 kg on the pole and about $171 in parts, over the $100 budget. See the [requirements](docs/03-requirements.md), including the requirements not yet met.
+TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 34.9 to 113 dBA (27.9 dBA at the low end with the IM72D128 microphone), a 22-byte record every 15 minutes, $62 of NoiseMap parts against the $100 budget and about $188 for a full node with the FieldNode core. The node weighs 3.32 kg, over its 3 kg target, and accuracy, frequency response and airtime at slow data rates are at risk. See the [requirements](docs/03-requirements.md) and the [decision record](docs/decisions/0001-trl2-review-decisions.md).
 
 ## Key components
 
-- Digital I²S MEMS microphone (ICS-43434 class, part choice awaiting Amish) in a printed head, pointing up
+- Digital MEMS microphone on an adapter board that takes an ICS-43434 or an IM72D128, in a printed head, pointing up
 - Level processor in the head computing A- and C-weighted levels once a second; audio stays in its RAM
 - Standard FieldNode core: IP65 enclosure, 6 W panel, one LiFePO4 cell, MPPT charger and LoRaWAN radio
 - 90 mm foam windscreen with bird spike
-- Aluminum arm and band-clamp pole mount, no drilling
+- Aluminum arm with its own band clamp, and a street pole adapter for 60 to 140 mm poles, no drilling
 
-The working bill of materials is in [bom/bom.csv](bom/bom.csv).
+The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
 
 ## Safety
 
 > Installing on a street pole is work at height beside traffic. The node contains a LiFePO4 cell of about 19 Wh: fuse it and charge only within the maker's temperature limits. Fit a safety lanyard to the microphone arm. Readings are indicative, not certified measurements.
 >
-> Privacy by design: no images, audio recordings or personal identifiers leave the device; only aggregate counts or levels are stored. Check local data protection law before any deployment. Street furniture and pole mounts must be installed only with the asset owner's permission, by trained crews, with fall protection and traffic management as local rules require.
+> Privacy by design: no images, audio recordings or personal identifiers leave the device; only sound levels are stored or sent. The guarantee rests on the open head firmware and its published build hash. Check local data protection law before any deployment. Street furniture and pole mounts must be installed only with the asset owner's permission, by trained crews, with fall protection and traffic management as local rules require.
 
 ## Repository layout
 
