@@ -20,7 +20,7 @@ It is open and garage-buildable because the people who most need the evidence, r
 
 Noise is one of the largest environmental health burdens in cities. In the EU about 92 million people are exposed to harmful road traffic noise, and long-term transport noise is linked to about 66,000 premature deaths and about 50,000 new cases of cardiovascular disease a year ([EEA](https://www.eea.europa.eu/en/topics/in-depth/noise)). The WHO recommends keeping road traffic noise below 53 dB Lden and 45 dB Lnight ([EEA, citing WHO 2018](https://www.eea.europa.eu/publications/health-risks-caused-by-environmental)), stricter than the 55 dB Lden threshold used for EU reporting.
 
-Yet official noise maps are mostly modeled and, in the EU, reviewed only every five years ([Directive 2002/49/EC](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002L0049)), while complaints pile up without measurements behind them. By 2018 New York City's 311 line had logged more than 2.3 million noise complaints since 2010, more than for any other issue ([Bello et al., SONYC](https://arxiv.org/abs/1805.00889)).
+Yet official noise maps are mostly modeled and, in the EU, reviewed only every five years ([Directive 2002/49/EC](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002L0049)), while complaints pile up without measurements behind them. By 2018 New York City's 311 line had logged more than 2.3 million noise complaints since 2010, more than for any other issue ([Bello et al., *Communications of the ACM*, 2018](https://arxiv.org/pdf/1805.00889)).
 
 ## Where it could be used
 
@@ -42,13 +42,13 @@ Yet official noise maps are mostly modeled and, in the EU, reviewed only every f
 | European Union | About 92 million people are exposed to harmful road traffic noise ([EEA](https://www.eea.europa.eu/en/topics/in-depth/noise)); strategic maps are modeled and updated every five years, so street-level measurements add what the maps miss. |
 | United States | The EPA set 55 dB outdoors as the level that prevents interference and annoyance in 1974 ([US EPA](https://www.epa.gov/archive/epa/aboutepa/epa-identifies-noise-levels-affecting-health-and-welfare.html)); noise was New York City's most common 311 complaint when SONYC was described in 2018 ([Bello et al.](https://arxiv.org/abs/1805.00889)). |
 | France (Paris region) | Bruitparif already deploys sensors in lively Paris neighborhoods and on construction sites ([Bruitparif](https://www.bruitparif.fr/la-meduse/)); an open, low-cost node could extend coverage to smaller towns. |
-| India | Dense, fast-growing cities with heavy traffic and horn use, where official monitoring covers few sites and residents' groups often lack data. |
-| Sub-Saharan Africa | Rapidly growing cities such as Lagos and Nairobi, with busy roads, generators and street trade, have little or no routine noise monitoring. |
-| Latin America | Large cities with active street nightlife, where a level-only design helps win residents' trust in public sensors. |
+| India | The national real-time noise network launched in 2011 with 35 stations in seven metros, five terminals per city, with expansion to 25 cities planned ([Press Information Bureau, Government of India](https://www.pib.gov.in/newsite/erelcontent.aspx?relid=71212&reg=3&lang=2)); a few fixed terminals per city leave most streets unmeasured. |
+| Sub-Saharan Africa (Nigeria) | The UN Environment Programme lists Ibadan among the cities worldwide where acceptable noise levels are surpassed ([UNEP, Frontiers 2022](https://www.unep.org/news-and-stories/press-release/deadly-wildfires-noise-pollution-and-disruptive-timing-life-cycles)); a low-cost open node can give such cities measured data. |
+| Southeast Asia (Thailand, Vietnam) | Bangkok and Ho Chi Minh City are also on UNEP's list of cities where acceptable noise levels are surpassed ([UNEP, Frontiers 2022](https://www.unep.org/news-and-stories/press-release/deadly-wildfires-noise-pollution-and-disruptive-timing-life-cycles)). |
 
 ## What sparked the idea
 
-The idea traces back to Stratumseind, a nightlife street in Eindhoven, the Netherlands, which the city, the police and technology firms turned into a living lab. Its sound sensors measured not only levels but "emotions in voices", to spot rising aggression, and the project's director said, "We are not listening in on people or record what they're saying" ([The Next Web, 2018](https://thenextweb.com/the-next-police/2018/06/08/1128392/)). People on the street had to take that on trust, and legal research on the lab argued that such collective sound monitoring can still limit what individuals do, even without identifying anyone ([Galič, 2019](https://www.researchgate.net/publication/333673572_Surveillance_privacy_and_public_space_in_the_Stratumseind_Living_Lab_the_smart_city_debate_beyond_data)). NoiseMap starts from the opposite end: measure loudness only, and publish the firmware so that residents can check the claim instead of trusting it.
+The idea traces back to Stratumseind, a nightlife street in Eindhoven, the Netherlands, which the municipality and the Dutch Institute for Technology, Safety & Security (DITSS), with the police and local businesses, turned into a living lab. The lab tested acoustic sensors that locate breaking glass and fireworks and recognize voices under high stress, to spot rising aggression ([The Hague Security Delta](https://securitydelta.nl/services/innovation/living-labs/stratumseind)). Leon Verver, director of DITSS, said, "We are not listening in on people or record what they're saying" ([The Next Web, 2018](https://thenextweb.com/the-next-police/2018/06/08/1128392/)). People on the street had to take that on trust, and legal research on the lab argued that such collective monitoring can still limit what individuals do, even without identifying anyone ([Galič, *Ars Aequi*, 2019](https://www.researchgate.net/publication/333673572_Surveillance_privacy_and_public_space_in_the_Stratumseind_Living_Lab_the_smart_city_debate_beyond_data)). NoiseMap starts from the opposite end: measure loudness only, and publish the firmware so that residents can check the claim instead of trusting it.
 
 ## Problem
 
@@ -95,6 +95,12 @@ The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric mo
 ## Documentation
 
 Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (NSM-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `NSM-PRC-001/v1.0`.
+
+## Credits
+
+Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+
+AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
 ## Licenses
 

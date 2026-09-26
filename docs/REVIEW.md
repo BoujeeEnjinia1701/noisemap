@@ -188,3 +188,15 @@ Requirements not met or at risk:
 ### Recommended next step
 
 Review this note and the media, then decide items 1 to 3. If approved, run `/advance-trl3` to check the noise floor, frequency response, power and wind load by calculation, define the wind-flagging method, and produce the parametric model and drawing sheet.
+
+## Session 2026-09-26: sources strengthened
+
+| README item | Old source | New source |
+| --- | --- | --- |
+| "What sparked the idea" (Stratumseind living lab) | The Next Web, 2018, standing alone for the lab's description | [The Hague Security Delta living lab page](https://securitydelta.nl/services/innovation/living-labs/stratumseind) for the lab's partners and acoustic aggression detection; The Next Web kept alongside only for the DITSS director's quote; Galič now identified as *Ars Aequi*, 2019 |
+| India row | None | [Press Information Bureau, Government of India, 2011](https://www.pib.gov.in/newsite/erelcontent.aspx?relid=71212&reg=3&lang=2): national real-time noise network launched with 35 stations in seven metros |
+| Sub-Saharan Africa row | None (Lagos and Nairobi, uncited) | Rewritten as Sub-Saharan Africa (Nigeria), citing the [UNEP Frontiers 2022 press release](https://www.unep.org/news-and-stories/press-release/deadly-wildfires-noise-pollution-and-disruptive-timing-life-cycles), which lists Ibadan among cities where acceptable noise levels are surpassed |
+| Latin America row | None | Replaced with Southeast Asia (Thailand, Vietnam): Bangkok and Ho Chi Minh City, same UNEP source; no verifiable Latin American source was found this session |
+| New York 311 figure (Burning platform) | arXiv abstract page (figure not on it) | [Full paper PDF](https://arxiv.org/pdf/1805.00889), *Communications of the ACM*, 2018, which contains the figure |
+
+All other links in the four sourced README sections (EEA noise page, EEA briefing citing WHO 2018, Directive 2002/49/EC, US EPA 1974, Bruitparif) were fetched and confirmed on 2026-09-26. `docs/01-problem.md` did not cite The Next Web, so no controlled document changed. The INSPIRATIONS.md line for NoiseMap was updated to list the stronger source; the event is unchanged.
