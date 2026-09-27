@@ -200,3 +200,32 @@ Review this note and the media, then decide items 1 to 3. If approved, run `/adv
 | New York 311 figure (Burning platform) | arXiv abstract page (figure not on it) | [Full paper PDF](https://arxiv.org/pdf/1805.00889), *Communications of the ACM*, 2018, which contains the figure |
 
 All other links in the four sourced README sections (EEA noise page, EEA briefing citing WHO 2018, Directive 2002/49/EC, US EPA 1974, Bruitparif) were fetched and confirmed on 2026-09-26. `docs/01-problem.md` did not cite The Next Web, so no controlled document changed. The INSPIRATIONS.md line for NoiseMap was updated to list the stronger source; the event is unchanged.
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26.
+
+### What was done
+
+`cad/src/product_model.py` adds a product appearance model for photoreal renders. It exposes `product_parts()` (45 parts: 36 shell, 8 internal, 1 context), `TITLE` and `RENDER_VIEWS` (hero with a short pole section, exploded, and a detail view without the pole). It imports `PARAMS`, `derived()` and `build_parts()` from `cad/src/model.py`; the pole adapter, tilt bracket, arm and head reuse the model.py solids, and every main dimension, height and interface is unchanged. It adds:
+
+- The FieldNode enclosure split into body and lid at a parting line, with filleted edges, a gasket line, four lid screws, side ribs, an ePTFE vent, M12 port nuts, the knurled sensor cable plug and a dust cap on the spare port.
+- A lid label that reads "NoiseMap, records sound levels only, no audio is stored or sent", with a teal "dB ONLY" band (kit accent #0F766E).
+- A 6 W panel with an aluminium frame, dark cells, a cell grid and a junction box.
+- Rounded back plate corners, V-block bolts, band clamp bolts, the arm band clamp housing and the collar screw.
+- On the microphone head: grip grooves, a teal accent ring, a cable gland, the foam windscreen (fabric material) and a separate bird spike.
+- Internals: the power and radio board with the LoRaWAN module and shield can, the cell with terminals and its cradle, the microphone adapter board and the level processor.
+- The sensor cable along the model.py route with rounded bends, and a 1.13 m section of 114.3 mm street pole as context.
+
+The README hero line now points to `media/render-hero.png`, with an "Exploded render" link; the orchestrator produces the render files.
+
+### Differences from model.py (Proposed, awaiting Amish)
+
+- **Lit status light on the lid.** Neither model.py nor the BOM shows a status light on the FieldNode enclosure. The render shows a small green light on the lid. Recommendation: keep it as an appearance cue and raise it with FieldNode as an optional light pipe from the board, costed there. Alternatively, remove it from the appearance model.
+- **Lid label text.** The public notice (D8) is specified for the pole, not the enclosure. The render puts a "records sound levels only" label on the lid. Recommendation: keep the lid label and the pole notice both, with the wording checked by Amish before any public use.
+- **Head grip grooves and accent ring.** Model.py shows a plain ASA tube. The grooves (0.6 mm deep) and the ring are cosmetic and leave the 3 mm wall, acoustic port and skirt unchanged. Recommendation: keep them for the render; revisit at TRL 4 if the print process makes them costly.
+- **Cable plug and dust cap.** Model.py shows the M12 ports as plain cylinders; the render adds a plug on the sensor port and a cap on the spare port, and the cable starts at the plug. Recommendation: accept; this is appearance only.
+
+### Status
+
+This is an appearance model only: no tolerances, no fabrication detail, no PCB layout. `trl` stays 3, and TRL 4 remains on hold.
