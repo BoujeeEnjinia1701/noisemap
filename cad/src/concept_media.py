@@ -32,6 +32,9 @@ CURB_X = D["r"] + 450.0            # curb 0.45 m in front of the pole face
 SW = 150.0                          # curb height; road surface at z = -150
 
 parts = [Part(name, shape, colour, bom, explode) for _, name, shape, colour, bom, explode in build_parts()]
+for _p in parts:                    # keep the level processor board inside the frame of the exploded view
+    if _p.name.startswith("Level processor"):
+        _p.explode = (380, 0, -140)
 sidewalk = Pos(CURB_X - 1100, 0, -SW / 2) * Box(2200, 2400, SW)
 road = Pos(CURB_X + 700, 0, -SW - 30) * Box(1400, 2400, 60)
 person = human_figure(1750.0, x=-900.0, y=-700.0, z=0.0)
