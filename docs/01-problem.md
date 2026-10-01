@@ -3,9 +3,9 @@ doc_id: NSM-PRB-001
 title: NoiseMap problem statement
 project: NoiseMap
 doc_type: Problem statement
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Cost figures from NSM-CAL-001 v0.3; budget as a value-engineering target
 ---
 
 # NoiseMap problem statement
@@ -56,7 +60,7 @@ Operating context: clamped to an existing street pole with the microphone about 
 
 ## Constraints
 
-- Garage-buildable prototype. The $100 budget covers the NoiseMap parts, now $62.00; the FieldNode core is costed in the FieldNode repo ($126.00), so a full node is about $188 (NSM-DDR-001 D1, NSM-CAL-001).
+- Garage-buildable prototype. The $100 value-engineering target covers the NoiseMap parts, estimated at $72.00; the FieldNode core is costed in the FieldNode repo ($139.00), so a full node is about $211 (NSM-DDR-001 D1, NSM-CAL-001).
 - Built on the lab's shared **FieldNode** power and radio core, as the FieldNode README lists NoiseMap among its intended users.
 - Privacy by design: no images, audio recordings or personal identifiers leave the device; only sound levels are stored or sent. The guarantee rests on open, auditable head firmware with read-out protection and a published build hash, not on the data links alone (NSM-DDR-001 D2).
 - Clamp-on mounting with no drilling, welding or electrical connection to the pole.

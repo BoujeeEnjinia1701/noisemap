@@ -2,19 +2,19 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![DOI](https://zenodo.org/badge/1388477501.svg)](https://zenodo.org/badge/latestdoi/1388477501) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/noisemap/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/noisemap/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/noisemap/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/noisemap)
 
-**Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** $100 USD for the NoiseMap parts (FieldNode core costed separately) · **Difficulty:** 2 of 5
+**Area:** Smart Cities · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** $100 USD for the NoiseMap parts, estimated $72 (FieldNode core costed separately) · **Difficulty:** 2 of 5
 
 A sound level meter node that records decibel levels only, never audio, to map traffic and nightlife noise.
 
 ![NoiseMap: street pole sound level meter that records decibels only, never audio, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement NSM-DWG-001 (PDF)](cad/drawings/NSM-DWG-001.pdf) · [Calculations NSM-CAL-001](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement NSM-DWG-001 (PDF)](cad/drawings/NSM-DWG-001.pdf) · [Calculations NSM-CAL-001](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
 Most noise disputes turn on one question: how loud was it, and when? A sound level meter answers that with a few numbers per second; it does not need to keep any sound. NoiseMap puts a digital MEMS microphone and a small processor in a head about 4 m above the street, turns the sound into A- and C-weighted levels on the spot, and passes only those levels to the lab's standard FieldNode solar and LoRaWAN core. The head firmware sends levels only, and it is open and published with a build hash, so residents, venues and the city can check for themselves that the street is not being listened to.
 
-It is open and garage-buildable because the people who most need the evidence, residents' groups and small city noise teams, cannot buy certified monitoring terminals by the dozen. A MEMS microphone, a microcontroller board, a printed housing, a foam windscreen, an arm and a street pole adapter cost about $62 on top of the FieldNode core, and the open firmware lets anyone check that the node measures levels and nothing else.
+It is open and garage-buildable because the people who most need the evidence, residents' groups and small city noise teams, cannot buy certified monitoring terminals by the dozen. A MEMS microphone, a microcontroller board, a printed housing, a foam windscreen, an arm and a street pole adapter cost about $72 on top of the FieldNode core, and the open firmware lets anyone check that the node measures levels and nothing else.
 
 ## Burning platform
 
@@ -60,7 +60,7 @@ A sound level meter node that records decibel levels only, never audio, to map t
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
-TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 34.9 to 113 dBA (27.9 dBA at the low end with the IM72D128 microphone), a 22-byte record every 15 minutes, $62 of NoiseMap parts against the $100 budget and about $188 for a full node with the FieldNode core. With pocketed V-blocks and saddle the node weighs 3.45 kg, within the 3.5 kg of R10 (relaxed from 3 kg), and an automatic interval rule keeps airtime within fair use at slow data rates; accuracy, measuring range and frequency response remain at risk. See the [requirements](docs/03-requirements.md) and the decision records [NSM-DDR-001](docs/decisions/0001-trl2-review-decisions.md) and [NSM-DDR-002](docs/decisions/0002-recommendations-accepted.md).
+TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 34.9 to 113 dBA (27.9 dBA at the low end with the IM72D128 microphone), a 22-byte record every 15 minutes, an estimated $72 of NoiseMap parts against a $100 value-engineering target and about $211 for a full node with the FieldNode core. Made constructable (sawn V-blocks, a bent sheet arm saddle with two bands, fixings throughout), the node weighs 3.45 kg, within the 3.5 kg of R10 (relaxed from 3 kg), and an automatic interval rule keeps airtime within fair use at slow data rates; accuracy, measuring range and frequency response remain at risk. See the [requirements](docs/03-requirements.md) and the decision records [NSM-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [NSM-DDR-002](docs/decisions/0002-recommendations-accepted.md) and [NSM-DDR-003](docs/decisions/0003-design-for-construction.md).
 
 ## Key components
 
@@ -68,9 +68,15 @@ TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates):
 - Level processor in the head computing A- and C-weighted levels once a second; audio stays in its RAM
 - Standard FieldNode core: IP65 enclosure, 6 W panel, one LiFePO4 cell, MPPT charger and LoRaWAN radio
 - 90 mm foam windscreen with bird spike
-- Aluminum arm with its own band clamp, and a street pole adapter for 60 to 140 mm poles, no drilling; V-blocks and saddle pocketed for mass
+- Aluminum arm on a bent sheet saddle with its own two band clamps, and street pole V-blocks for 60 to 140 mm poles that fit the FieldNode back plate; no drilling of the pole
 
 The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
+
+## Building the prototype
+
+The [prototype build plan](docs/05-build-plan.md) (NSM-BLD-001) shows how to make each component and fit it to the next, with a making sketch for every made part and a picture for every assembly step. The FieldNode core is built to its own plan and gets two larger V-blocks sawn from aluminium bar in place of its own; the arm saddle is bent from sheet by a local shop; the head and its cap are printed in ASA; the rest is bought. The work needs basic metalwork, 3D printing and fine soldering, and no certified trade. Decisions still open are in the [design decisions register](docs/06-design-decisions.md).
+
+![NoiseMap prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
 
 ## Safety
 

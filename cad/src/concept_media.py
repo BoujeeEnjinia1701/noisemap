@@ -20,7 +20,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build123d import Box, Pos
 import concept
 from concept import Part, render_all, human_figure
-from model import PARAMS as P, derived, build_parts, pole
+from model import PARAMS as P, derived, build_parts, pole, patch_svg_export
+patch_svg_export()
 
 import matplotlib
 matplotlib.use("Agg")
@@ -107,8 +108,8 @@ if __name__ == "__main__":
                      "Head sends levels only; audio stays in its RAM",
                      "12.2 mW; 53 days without sun (NSM-CAL-001)",
                      "Range 34.9 (27.9 with IM72D128) to 113 dBA",
-                     "NoiseMap parts $62 vs $100; node $188 with FieldNode"],
-        date="2026-09-25",
+                     "NoiseMap parts $72 (VE target $100); node $211"],
+        date="2026-10-01",
         scale_figure=False, context=context,
         cut_exclude=["Solar panel, 6 W", "Panel tilt bracket", "Street pole adapter, V-blocks and bands", "Sensor cable, M12"],
     )

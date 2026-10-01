@@ -3,9 +3,9 @@ doc_id: NSM-CAL-001
 title: NoiseMap sizing calculations
 project: NoiseMap
 doc_type: Calculation note
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,13 +17,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002); pocketed V-blocks and saddle, corrected V-block geometry, R10 at 3.5 kg, interval rule for R12, level-based wind flag
+- version: "0.3"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Mechanics, mass and cost re-run for the constructable design (NSM-DDR-003); FieldNode core at FND-CAL-001 v0.3; budget treated as a value-engineering target
 ---
 
 # NoiseMap sizing calculations
 
-On paper, NoiseMap meets eight of its fifteen requirements (four by calculation, four by design), has three at risk, misses none and leaves four that only tests can settle. Under NSM-DDR-002 R10 is relaxed to 3.5 kg and the V-blocks and arm saddle are pocketed; with the V-block geometry corrected in the model (v0.1 modeled each block as a flat 10 mm plate, which understated its mass), the node weighs **3.45 kg against 3.5 kg (R10)**, a margin of only 0.05 kg. An automatic interval rule at slow data rates brings R12 within fair use at every spreading factor. Energy is not a concern: the design load is 12.2 mW, 12 % of FieldNode's 100 mW allowance, which gives 53 days without sun and keeps the node in credit even on the hot clear days that stop FieldNode charging. The measuring range reaches 35 dBA with no margin on the ICS-43434 (34.9 dBA) and with 7 dB of margin on the IM72D128 (27.9 dBA), and tops out at 113 dBA. Accuracy (R3) is at risk: an assumed uncertainty budget gives ±2.9 dB, and a facade behind the pole can add up to 2.4 dB before a site correction. Under NSM-DDR-001 D1 the $100 budget covers the NoiseMap parts, now $62.00; the full node with the FieldNode core is $188.00.
+On paper, NoiseMap meets eight of its fifteen requirements (four by calculation, four by design), has three at risk, misses none and leaves four that only tests can settle. Under NSM-DDR-002 R10 is relaxed to 3.5 kg. With the design made constructable (NSM-DDR-003: sawn and drilled V-blocks, a bent sheet arm saddle with two bands, fixings throughout, and the FieldNode core without its small-pole V-blocks and bands), the node weighs **3.45 kg against 3.5 kg (R10)**, a margin of only 0.05 kg. An automatic interval rule at slow data rates brings R12 within fair use at every spreading factor. Energy is not a concern: the design load is 12.2 mW, 12 % of FieldNode's 100 mW allowance, which gives 53 days without sun and keeps the node in credit even on the hot clear days that stop FieldNode charging. The measuring range reaches 35 dBA with no margin on the ICS-43434 (34.9 dBA) and with 7 dB of margin on the IM72D128 (27.9 dBA), and tops out at 113 dBA. Accuracy (R3) is at risk: an assumed uncertainty budget gives ±2.9 dB, and a facade behind the pole can add up to 2.4 dB before a site correction. Under NSM-DDR-001 D1 the $100 `budget_usd` applies to the NoiseMap parts; it is a value-engineering target, not a limit. The constructable NoiseMap parts are estimated at $72.00, $28.00 under the target; the full node with the FieldNode core is $211.00.
 
-Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The tag in brackets, for example [A1], is the line of the script's output that carries the number. The script imports `PARAMS`, `derived()` and the part volumes from `cad/src/model.py`, reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and takes FieldNode figures from FND-CAL-001 v0.1.
+Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The tag in brackets, for example [A1], is the line of the script's output that carries the number. The script imports `PARAMS`, `derived()` and the part volumes from `cad/src/model.py`, reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and takes FieldNode energy figures from FND-CAL-001 v0.1 and its mass from FND-CAL-001 v0.3.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They do not show that the pole mounting, the lithium iron phosphate cell or the installation is safe. Clamp preload, arm fixing and the cell's charge lockout must be checked on hardware before any node is installed. See NSM-PRC-001, Safety.
 
@@ -44,7 +48,7 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 | Speech codec | Codec 2 runs at 700 to 3,200 bit/s | [Rowetel, Codec 2](https://www.rowetel.com/?page_id=452) |
 | Reflections | Incoherent addition; facade energy reflection 0.9; lanes 5 and 10 m from the microphone | Screening values |
 | Wind | 35 m/s gust, 1.225 kg/m³; Cd 1.2 on tubes, 0.5 on the foam sphere; 6063-T5 class E = 69 GPa, yield 145 MPa; band preload 1,000 N and friction 0.2; turbulence intensity 0.2 at 4 m | Handbook ranges; preload as FND-CAL-001 |
-| Mass | Aluminium 2.70, ASA 1.07, foam 0.030 g/cm³ from model volumes (bands counted as aluminium); boards 15 g, spike 6 g, cable 90 g, hardware and lanyard 50 g; FieldNode core 2.41 kg with its small-pole V-blocks and bands left in; V-blocks pocketed from top and bottom to 4 mm walls and an 8 mm mid-height web, saddle pocketed 6 mm deep on the pole side (NSM-DDR-002) | Estimates |
+| Mass | Aluminium 2.70, stainless steel 7.90, ASA 1.07, nylon 1.15, foam 0.030 g/cm³ from model volumes (printed parts counted solid); boards 15 g, cable 90 g, ties, tape and small parts 30 g; FieldNode base node 2.45 kg (FND-CAL-001 v0.3) less its small-pole V-blocks and 80 g of bands, which a street pole node leaves off (NSM-DDR-003) | Estimates |
 
 ## A. Measuring range (R4)
 
@@ -112,22 +116,22 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 
 - **Wind.** Turbulence at 4 m makes pressure fluctuations of about 1 Pa rms at 2 m/s, 6 Pa at 5 m/s and 25 Pa at 10 m/s at an unscreened microphone (94, 110 and 122 dB), mostly below 20 Hz [G1]. The foam windscreen removes much of this, but what reaches the microphone scales roughly with the fourth power of wind speed: from 2 to 5 m/s it rises by 15.9 dB, and 1 m/s near 5 m/s is 3.2 dB [G2]. A Z-weighted band below 40 Hz, computed in the head, and its one-second spread therefore separate windy minutes sharply from traffic once a threshold is set. The threshold cannot be computed; it needs a field comparison with an anemometer.
 - **Rain.** Rain on the foam gives broadband impulses that level statistics do not reliably separate from street noise. The method is a server-side flag from the nearest public weather station or radar rainfall, which needs no hardware.
-- **Wind sensor option, not adopted.** A cup anemometer with a pulse output on FieldNode's second port would cost about $25 and weigh about 0.15 kg (indicative, unchecked), bringing the NoiseMap parts to $87.00 and the node to 3.60 kg, over R10 [I3]. Under NSM-DDR-002 (item O3) the level-based flag is the method, so no anemometer is fitted.
+- **Wind sensor option, not adopted.** A cup anemometer with a pulse output on FieldNode's second port would cost about $25 and weigh about 0.15 kg (indicative, unchecked), bringing the NoiseMap parts to $97.00 and the node to 3.60 kg, over R10 [I3]. Under NSM-DDR-002 (item O3) the level-based flag is the method, so no anemometer is fitted.
 - **R11 is not verifiable at TRL 3.** The method is chosen; the threshold needs a field comparison with an anemometer, which is TRL 4 work and on hold.
 
 ## H. Mechanics (R10)
 
-- **Mass.** To FieldNode's 2.41 kg the pocketed arm, saddle and band add 0.314 kg, the head housing 0.066 kg, the boards 0.015 kg, the windscreen and spike 0.016 kg, the cable 0.090 kg, the pocketed street pole adapter 0.485 kg and hardware 0.050 kg [H1]: **3.45 kg against the relaxed 3.5 kg, so R10 is met on paper**, with 0.05 kg of margin [H2]. Pocketing saves 0.516 kg (0.456 kg on the V-blocks, 0.061 kg on the saddle); solid blocks and saddle would give 3.96 kg [H2b].
-- **Correction to v0.1.** Version 0.1 gave 3.32 kg solid and 3.10 kg pocketed, but the model then cut each V-block down to a flat 10 mm plate (the V notch was centered on the apex instead of starting at it), so the adapter was counted at 0.294 kg. With the V-blocks modeled as 110 x 60 x 40 mm blocks with a true 90° notch, the solid adapter is 0.94 kg. The FieldNode small-pole V-blocks and bands, left in the core mass, would save a little more; so would shorter 30 mm blocks, if the margin is needed.
-- **Wind on the arm.** At 35 m/s (750 Pa) the arm takes 9.5 N, the head tube 3.8 N and the windscreen 2.4 N [H3]. The arm root sees 4.61 N·m from wind and 0.74 N·m from weight, 4.67 N·m combined; the 25 x 2 mm tube (770 mm³ section modulus) is stressed to 6.1 MPa, a factor of 24 on yield [H4]. The tip moves 0.37 mm in the gust.
-- **Vibration.** The arm and head have a first mode near 70 Hz. Vortex shedding matches it at about 8.8 m/s across the arm and 14.0 m/s across the head [H5]. Stresses are low, but vibration at those speeds would add structure-borne noise at the microphone, and those intervals are windy enough to be flagged anyway.
-- **Clamp.** Wind twists the arm clamp about the pole with 5.50 N·m against 22.9 N·m of friction (factor 4.2), and the arm and head pull it down with 4.0 N against 400 N [H6]. Both depend on the assumed 1,000 N preload.
-- **Pole load.** The node adds about 97 N at 3.5 to 4 m in a 35 m/s gust (81 N from FieldNode) [H7], which the pole owner should check.
-- **Fit.** On a 60 mm pole the V contacts sit 21.2 mm along each 70.7 mm V face and on a 140 mm pole 49.5 mm; the 100 mm V seats poles up to 141 mm. Bands need about 261 to 450 mm [H8], [H8b]. The fit to 60 to 140 mm poles is met by design; the 45 min installation time can only be timed.
+- **Mass.** The FieldNode base node is 2.45 kg; a street pole node leaves off its V-blocks (0.144 kg) and bands (0.08 kg), which gives 2.23 kg. To that the arm saddle, tube, flange and fixings add 0.391 kg, the arm bands and lanyard 0.129 kg, the head housing, cap and bolts 0.108 kg, the boards 0.015 kg, the windscreen and spike 0.023 kg, the cable and gland 0.099 kg, the street pole V-blocks and screws 0.314 kg, their bands 0.114 kg, and ties and small parts 0.030 kg [H1]: **3.45 kg against the relaxed 3.5 kg, so R10 is met on paper**, with 0.05 kg of margin [H2]. Sawing the V-blocks from 16 mm bar rather than 20 mm and drilling four 14 mm holes in each saves 0.144 kg [H2b].
+- **History.** Version 0.2 also gave 3.45 kg, with machined, pocketed 110 x 60 x 40 mm V-blocks, a pocketed saddle, one arm band and the 2.41 kg FieldNode core with its small-pole parts left in. The constructable design (NSM-DDR-003) adds a second arm band, a tube flange, a head cap, a gland and fixings, and leaves the FieldNode small-pole parts off; the two roughly balance.
+- **Wind on the arm.** At 35 m/s (750 Pa) the 383 mm arm takes 8.6 N, the head tube 3.8 N and the windscreen 2.4 N [H3]. The arm root sees 4.01 N·m from wind and 0.83 N·m from weight, 4.10 N·m combined; the 25 x 2 mm tube (770 mm³ section modulus) is stressed to 5.3 MPa, a factor of 27 on yield [H4]. The tip moves 0.26 mm in the gust.
+- **Vibration.** The arm and head have a first mode near 70 Hz. Vortex shedding matches it at about 8.8 m/s across the arm and 14.1 m/s across the head [H5]. Stresses are low, but vibration at those speeds would add structure-borne noise at the microphone, and those intervals are windy enough to be flagged anyway.
+- **Clamp.** The arm saddle now has two bands. Wind twists it about the pole with 4.86 N·m against 45.7 N·m of friction (factor 9.4), and the arm and head pull it down with 6.5 N against 800 N [H6]. Both depend on the assumed 1,000 N preload per band.
+- **Pole load.** The node adds about 96 N at 3.5 to 4 m in a 35 m/s gust (81 N from FieldNode) [H7], which the pole owner should check.
+- **Fit.** On a 60 mm pole the V contacts sit 21.2 mm either side of the centre line and on a 140 mm pole 49.5 mm, inside both the V-blocks' 106 mm mouth and the saddle's 109 mm mouth; poles up to 141 mm keep their contacts 3 mm inside both [H8], [H8b]. The street pole bands need about 369 to 558 mm. The fit to 60 to 140 mm poles is met by design; the 45 min installation time can only be timed.
 
 ## I. Cost (R13)
 
-The BOM has 14 lines, all priced. Lines 1 to 6, the FieldNode core, total $126.00, the figure in the FieldNode BOM; lines 7 to 14, the NoiseMap parts, total **$62.00**, 62 % of the $100 `budget_usd`, a margin of $38.00. The full node is $188.00, $88.00 more than $100 [I1], [I2]. Under D1 the budget covers the NoiseMap parts, so **R13 is met on paper**. The TRL 2 figure of $171 used $119 for the core and had no street pole adapter.
+The BOM has 14 lines, all priced. Lines 1 to 6, the FieldNode core, total $139.00, the base node figure in the FieldNode BOM after its own design for construction (FND-DDR-003); lines 7 to 14, the NoiseMap parts, total **$72.00** [I1]. Value-engineering target: USD 100 (`budget_usd`, a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 72.00 for the NoiseMap parts (USD 28.00 under the target); the full node is USD 211.00 [I2]. **R13 is met on paper.** The constructable design added $10.00 to the NoiseMap parts (two-band saddle and tube flange $6.00, cable gland $1.00, fixings and lanyard $2.00, head cap $1.00) and the FieldNode core rose from $126.00 to $139.00 under FND-DDR-003.
 
 ## L. Results against every requirement
 
@@ -142,10 +146,10 @@ The BOM has 14 lines, all priced. Lines 1 to 6, the FieldNode core, total $126.0
 | R9 | Calibration check | Calibrator fits the head with the windscreen off; offset stored in the head | 10 min or less | Not verifiable at TRL 3 |
 | R11 | Contaminated data | Level-based wind flag; server rain flag | Flag wind above 5 m/s and heavy rain | Not verifiable at TRL 3 (method chosen; threshold on hold with TRL 4) |
 | R14 | Service life | ASA, yearly windscreen, FieldNode cell swap | 5 years | Not verifiable at TRL 3 |
-| R10 | Installation and mass | 3.45 kg pocketed (3.96 kg solid); arm factor 24 on yield; clamp twist factor 4.2; fits 60 to 140 mm poles | 3.5 kg or less; 35 m/s gusts; two people, 45 min | Met on paper on mass (margin 0.05 kg); wind met on paper; time not verifiable at TRL 3 |
+| R10 | Installation and mass | 3.45 kg constructable design; arm factor 27 on yield; clamp twist factor 9.4; fits 60 to 140 mm poles | 3.5 kg or less; 35 m/s gusts; two people, 45 min | Met on paper on mass (margin 0.05 kg); wind met on paper; time not verifiable at TRL 3 |
 | R12 | Radio use | 15 min at SF7 to SF9 (23.7 s/day at SF9); 24, 48 and 87 min at SF10 to SF12 (at most 30.0 s/day) | 1 % duty cycle; 30 s/day | Met on paper (interval rule) |
 | R7 | Energy | 5.81 Wh/day stored against 0.29 Wh/day; 53 days without sun (16 cold, aged, upper bound) | Neutral at 1.5 h; 14 days | Met on paper |
-| R13 | Parts cost | NoiseMap parts $62.00; full node $188.00 | NoiseMap parts $100 or less | Met on paper |
+| R13 | Parts cost | NoiseMap parts $72.00; full node $211.00 | NoiseMap parts at or under the $100 value-engineering target | Met on paper (USD 28.00 under the target) |
 | R1 | Privacy | No storage or radio in the head; firmware sends levels only | Levels only; published build hash | Met by design (rests on firmware) |
 | R2 | Reported metrics | 22 bytes per 15 min | Metric set per D5 | Met by design |
 | R6 | Time stamps | LoRaWAN network time | Within 2 s of UTC | Met by design |
@@ -162,8 +166,8 @@ Counts [L2]: 0 not met, 3 at risk, 4 not verifiable at TRL 3, 4 met on paper, 4 
 | Autonomy about 30 days | 53 days (37 at -20 °C) | Updated |
 | Winter harvest about 5.8 Wh/day | 5.81 Wh/day | Stands |
 | Airtime about 24 s/day at SF9; 47 s at SF10 | 23.7 s and 47.4 s | Stands |
-| Mass about 2.3 kg; R10 met | 3.45 kg with pocketed V-blocks and saddle against the relaxed 3.5 kg (v0.1: 3.32 kg, with the V-blocks wrongly modeled as flat plates) | Updated per NSM-DDR-002 |
+| Mass about 2.3 kg; R10 met | 3.45 kg for the constructable design against the relaxed 3.5 kg (v0.2: 3.45 kg pocketed; v0.1: 3.32 kg, with the V-blocks wrongly modeled as flat plates) | Updated per NSM-DDR-002 and NSM-DDR-003 |
 | Wind load on the panel about 50 N | 52.2 N (FND-CAL-001); 16 N more on the arm and head | Updated |
-| Cost about $171 (core $119, NoiseMap $52) | $188.00 (core $126.00, NoiseMap $62.00 with the adapter) | BOM, precis and README updated |
-| Microphone 0.45 m from the pole; arm about 400 mm | 0.45 m; arm 422 mm from saddle to head | Stands |
+| Cost about $171 (core $119, NoiseMap $52) | $211.00 (core $139.00, NoiseMap $72.00 with the adapter and construction parts) | BOM, precis and README updated |
+| Microphone 0.45 m from the pole; arm about 400 mm | 0.45 m; arm tube 383 mm between the flange socket and the head socket | Stands |
 | Cable "far too slow" for audio | Too slow for raw audio, fast enough for a speech codec | Precis wording follows D2 |

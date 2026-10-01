@@ -3,9 +3,9 @@ doc_id: NSM-PRC-001
 title: NoiseMap design precis
 project: NoiseMap
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,11 +25,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Design made constructable (NSM-DDR-003); mass, cost and arm figures from NSM-CAL-001 v0.3; budget as a value-engineering target
 ---
 
 # NoiseMap design precis
 
-NoiseMap is a clamp-on street pole noise node. A digital MEMS microphone 4.0 m above the sidewalk feeds a small processor in the microphone head, which turns the sound into A- and C-weighted levels once a second and overwrites the audio within milliseconds. Only levels cross the cable to a standard FieldNode core, which sends a 22-byte record every 15 minutes over LoRaWAN. The TRL 3 calculations (NSM-CAL-001) give a design load of 12.2 mW, 53 days without sun and a range of 34.9 to 113 dBA (27.9 dBA with the IM72D128 microphone). The NoiseMap parts cost $62.00 against the $100 budget, which now covers them alone; a full node with the $126.00 FieldNode core is $188.00. With the V-blocks and arm saddle pocketed, the node weighs 3.45 kg, within R10's 3.5 kg (relaxed from 3 kg under NSM-DDR-002).
+NoiseMap is a clamp-on street pole noise node. A digital MEMS microphone 4.0 m above the sidewalk feeds a small processor in the microphone head, which turns the sound into A- and C-weighted levels once a second and overwrites the audio within milliseconds. Only levels cross the cable to a standard FieldNode core, which sends a 22-byte record every 15 minutes over LoRaWAN. The TRL 3 calculations (NSM-CAL-001) give a design load of 12.2 mW, 53 days without sun and a range of 34.9 to 113 dBA (27.9 dBA with the IM72D128 microphone). The NoiseMap parts are estimated at $72.00 against a $100 value-engineering target, which covers them alone; a full node with the $139.00 FieldNode core is $211.00. Made constructable under NSM-DDR-003, the node weighs 3.45 kg, within R10's 3.5 kg (relaxed from 3 kg under NSM-DDR-002). How to build it is in the prototype build plan, NSM-BLD-001.
 
 ![Figure 1. NoiseMap on a street pole with a 1.75 m person for scale](../media/hero.png)
 
@@ -55,13 +59,13 @@ Table 1. Main components. Numbers match the exploded view (Figure 3), `cad/src/m
 | 4 | Solar panel | 6 W, 290 x 200 mm, 40° tilt, doubling as a hood | FieldNode standard |
 | 5 | Panel tilt bracket | Flat-bar posts and struts | From FieldNode |
 | 6 | FieldNode pole mounting kit | Back plate 180 x 320 x 3 mm | Only the plate is used on street poles |
-| 7 | Microphone arm | 25 x 2 mm aluminum tube, 422 mm, saddle plate pocketed 6 mm deep on the pole side, and its own band clamp | Puts the microphone 0.45 m from the pole face; turns independently of the core |
+| 7 | Microphone arm | 25 x 2 mm aluminum tube, 383 mm, in a bought tube flange on a saddle bent from 2.5 mm aluminum sheet, held by its own two band clamps | Puts the microphone 0.45 m from the pole face; turns independently of the core |
 | 8 | Microphone head housing | Printed ASA tube 40 mm OD x 150 mm, 3 mm acoustic port, drip skirt, hydrophobic membrane | NSM-DDR-001 D13 |
 | 9 | MEMS microphone | Adapter board for an ICS-43434 (I²S, 65 dB SNR, [TDK InvenSense](https://invensense.tdk.com/products/ics-43434/)) or an IM72D128 (PDM, 72 dB(A) SNR, [DNMS](https://github.com/hbitter/DNMS)) | D3; the ICS-43434 is listed end of life |
 | 10 | Level processor | Cortex-M4F class low-power board (STM32L4 class) with I²S and PDM inputs and read-out protection | D4 |
 | 11 | Windscreen and bird spike | 90 mm open-cell foam ball bored 41 mm, stainless spike | Replace about yearly (estimate) |
 | 12 | Sensor cable | M12 5-pin, about 1.5 m, 3.3 V, ground and UART | FieldNode port; pinout follows FieldNode O2 |
-| 14 | Street pole adapter | Two 90° aluminum V-blocks 110 x 60 x 40 mm, pocketed to 4 mm walls and an 8 mm web, and two long stainless bands | Seats 60 to 140 mm poles; replaces FieldNode's 40 to 60 mm V-blocks |
+| 14 | Street pole adapter | Two 90° aluminum V-blocks 112 x 63 x 16 mm sawn from bar, on the FieldNode back plate's own screw holes, and two long stainless bands through its slots | Seats 60 to 140 mm poles; replaces FieldNode's 40 to 60 mm V-blocks |
 
 Line 13 of the BOM (fasteners, safety lanyard, ties, tape) has no callout.
 
@@ -69,7 +73,7 @@ Line 13 of the BOM (fasteners, safety lanyard, ties, tape) has no callout.
 
 ![Figure 4. Cutaway: FieldNode enclosure with cell and board (lower left), microphone head with processor inside the windscreen (upper right)](../media/cutaway.png)
 
-The general arrangement is drawing NSM-DWG-001 Rev P2 (`cad/drawings/NSM-DWG-001.pdf`), generated from `cad/src/model.py`, which also exports STEP and STL files in `cad/step/` and `cad/stl/`.
+The general arrangement is drawing NSM-DWG-001 Rev P3 (`cad/drawings/NSM-DWG-001.pdf`), generated from `cad/src/model.py`, which also exports STEP and STL files in `cad/step/` and `cad/stl/`.
 
 ## Key numbers
 
@@ -90,9 +94,9 @@ Table 2. Key numbers.
 | Autonomy | 53 days; 37 days at -20 °C | R7 met on paper |
 | Record and airtime | 22 bytes; 23.7 s/day at SF9 at 15 min; at most 30.0 s/day at SF10 to SF12 with the interval rule | R2 met; R12 met on paper |
 | Link capacity | UART 7,680 bit/s (150 times too slow for raw audio, enough for a speech codec) | R1 rests on firmware |
-| Mass on the pole | 3.45 kg with pocketed V-blocks and saddle (3.96 kg solid) | R10 met on paper at 3.5 kg; margin 0.05 kg |
+| Mass on the pole | 3.45 kg for the constructable design | R10 met on paper at 3.5 kg; margin 0.05 kg |
 | Wind at 35 m/s | Arm, head and windscreen 16 N; arm stress factor 24; clamp twist factor 4.2 | R10 met on paper |
-| Parts cost | NoiseMap $62.00; FieldNode core $126.00; full node $188.00 | R13 met on paper |
+| Parts cost | NoiseMap $72.00 against a $100 value-engineering target; FieldNode core $139.00; full node $211.00 | R13 met on paper |
 
 The accuracy of the measurement depends on the membrane, the windscreen, diffraction round the head and reflections from nearby facades, none of which can be settled on paper.
 
@@ -109,7 +113,7 @@ All of these are decided by Amish, 2026-09-25: go with recommendation (NSM-DDR-0
 - **Microphone part (D3).** A small adapter board takes either the ICS-43434 or the IM72D128; the IM72D128 gives 7 dB more margin at the quiet end.
 - **Field calibration (D7).** Each node is checked with a shared 94 dB, 1 kHz calibrator at install and at each windscreen change, and compared with a class 1 reference meter at one site per deployment, which also sets the site's reflection correction.
 - **Public notice (D8)** on each pole saying what is measured, with a link to this repository.
-- **Pocketed V-blocks and saddle, R10 at 3.5 kg (O2).** Pocketing saves about 0.52 kg; the 0.05 kg margin left is thin, so any added part (an anemometer, a heavier windscreen) needs a mass check.
+- **R10 at 3.5 kg (O2).** Under NSM-DDR-003 the V-blocks are sawn from 16 mm bar with drilled holes and the arm saddle is bent from sheet; the node is 3.45 kg, so the 0.05 kg margin is thin and any added part (an anemometer, a heavier windscreen) needs a mass check.
 - **Level-based wind flag (O3).** Wind is flagged from the Z-weighted band below 40 Hz and its one-second spread, with no added sensor; rain is flagged on the server from weather data. The threshold needs a field comparison with an anemometer, which is TRL 4 work and on hold.
 - **Interval rule at slow data rates (O4).** The core lengthens the reporting interval automatically at SF10 to SF12, following FieldNode's interval item, so R12 is met at every spreading factor.
 

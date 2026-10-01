@@ -1,4 +1,4 @@
-"""NoiseMap general arrangement drawing NSM-DWG-001 (Rev P2).
+"""NoiseMap general arrangement drawing NSM-DWG-001 (Rev P3).
 
 Run from the repo root:  python cad/src/sheets.py
 Builds cad/drawings/NSM-DWG-001.svg, .pdf and .png from the parametric model (cad/src/model.py).
@@ -12,7 +12,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / ".kit"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from drawing import Sheet, project_views  # noqa: E402
-from model import PARAMS as P, derived, assemblies, build_parts  # noqa: E402
+from model import PARAMS as P, derived, assemblies, build_parts, patch_svg_export  # noqa: E402
+
+patch_svg_export()
 
 D = derived(P)
 parts = build_parts()
@@ -21,25 +23,27 @@ work = ROOT / "cad/drawings/_views"
 views = project_views(asm, work)
 
 s = Sheet(project="NoiseMap", title="General arrangement, street pole node", dwg_no="NSM-DWG-001",
-          rev="P2", author="Amish Chadha", date="2026-09-25", concept=True,
-          material="Arm, saddle, V-blocks 6063 Al; head ASA; bands stainless. See bom/bom.csv",
+          rev="P3", author="Amish Chadha", date="2026-10-01", concept=True,
+          material="Saddle, tube, V-blocks Al; head ASA; bands stainless. See bom/bom.csv",
           revisions=[("P1", "Preliminary GA from model.py (NSM-CAL-001)", "2026-09-25", "AC"),
-                     ("P2", "Pocketed V-blocks and saddle; V notch corrected (NSM-DDR-002)", "2026-09-25", "AC")])
+                     ("P2", "Pocketed V-blocks and saddle; V notch corrected (NSM-DDR-002)", "2026-09-25", "AC"),
+                     ("P3", "Design for construction (NSM-DDR-003)", "2026-10-01", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
-s.add_svg(views["iso"], 276, 30, 140, 84, label="Isometric view", sublabel="Not to scale")
+s.add_svg(views["iso"], 276, 38, 140, 78, label="Isometric view", sublabel="Not to scale")
 s.add_notes("Key dimensions and interfaces (mm)", [
     f"Microphone port {P['mic_z']:.0f} above sidewalk, {P['mic_off']:.0f} off pole face",
     f"Design pole OD {P['pole_od']}; adapter seats {P['pole_range'][0]:.0f} to {P['pole_range'][1]:.0f}",
-    f"V-blocks {P['vb'][0]:.0f} x {P['vb'][1]:.0f} x {P['vb'][2]:.0f}, 90 deg, {P['vnotch_w']:.0f} opening,",
-    f"  pocketed: {P['vb_pocket'][0]:.0f} walls, {P['vb_pocket'][1]:.0f} web; saddle pocket {P['saddle_pocket'][2]:.0f} deep",
-    f"Arm {P['arm'][0]:.0f} x {P['arm'][1]:.0f} Al tube, {D['arm_len']:.0f} long, own band clamp",
-    f"Head {P['head'][0]:.0f} OD x {P['head'][2]:.0f}; port {P['port_d']:.0f} dia x {P['top_t']:.0f}",
-    f"Windscreen {P['ws_d']:.0f} foam ball, bore {P['ws_bore']:.0f}; spike {P['spike'][0]:.0f}",
-    "FieldNode core per FND-DWG-001: box 150 x 90 x 200,",
-    "  6 W panel at 40 deg, back plate 180 x 320 x 3",
+    f"V-blocks {P['vb'][0]:.0f} x {P['vb'][1]:.0f} x {P['vb'][2]:.0f}, 90 deg V, {2 * D['v_half_mouth']:.0f} mouth,",
+    "  on FieldNode's V-block screws; bands through its slots",
+    f"Arm saddle: {P['saddle'][3]} sheet channel, 2 bands; tube flange",
+    f"Arm {P['arm'][0]:.0f} x {P['arm'][1]:.0f} Al tube, {D['arm_len']:.0f} long, cross bolted",
+    f"Head {P['head'][0]:.0f} OD x {P['head'][2]:.0f}; port {P['port_d']:.0f} dia x {P['top_t']:.0f}; cap, M16 gland",
+    f"Windscreen {P['ws_d']:.0f} foam ball, bore {P['ws_bore']:.0f}; spike in skirt boss",
+    "FieldNode core per FND-DWG-001 Rev P3, without its",
+    "  small-pole V-blocks and bands",
     "Core and arm turn independently about the pole",
     "M12 5-pin cable 1.5 m: 3.3 V, GND, UART 9,600 baud",
-    "Mass about 3.45 kg (NSM-CAL-001 v0.2; R10 3.5 kg)",
+    "Mass about 3.45 kg (NSM-CAL-001 v0.3; R10 3.5 kg)",
     "PRELIMINARY, NOT FOR FABRICATION",
 ], x=276, y=128, width=140)
 s.save(ROOT / "cad/drawings/NSM-DWG-001")

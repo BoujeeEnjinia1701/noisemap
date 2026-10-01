@@ -1,10 +1,11 @@
-"""NoiseMap sizing calculations, NSM-CAL-001 v0.2 (TRL 3).
+"""NoiseMap sizing calculations, NSM-CAL-001 v0.3 (TRL 3, constructable design NSM-DDR-003).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md; each line carries a tag such as [A3]
 that the note cites. It also writes docs/04-calcs/results.csv (one row per requirement).
 Geometry comes from cad/src/model.py (PARAMS, derived and the part volumes), costs from
-bom/bom.csv and the budget from project.yaml. FieldNode figures are taken from FND-CAL-001 v0.1.
+bom/bom.csv and the budget from project.yaml. FieldNode energy figures are taken from FND-CAL-001 v0.1,
+its mass from FND-CAL-001 v0.3 (constructable design).
 First-principles estimates for a paper proof of concept; nothing here is measured.
 """
 import csv
@@ -16,7 +17,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "cad" / "src"))
-from model import PARAMS as P, derived, build_parts  # noqa: E402
+from model import PARAMS as P, derived, build_components  # noqa: E402
 
 D = derived(P)
 rows = []
@@ -70,7 +71,8 @@ FND_STORED_2PSH = 7.75     # Wh/day stored, worst month (2 peak sun hours)
 FND_USABLE = 15.36         # Wh usable in the cell
 FND_COLD, FND_EOL = 0.70, 0.80
 FND_HOT_CLEAN, FND_HOT_DUSTY = 0.8, 0.3    # Wh stored on a hot clear day without the shield
-FND_MASS = 2.41            # kg
+FND_MASS = 2.45            # kg, base node, FND-CAL-001 v0.3 [F1] (constructable design, FND-DDR-003)
+FND_BANDS = 0.08           # kg, FieldNode band clamps (FND-CAL-001 v0.3, bought masses), not fitted on a street pole
 FND_WIND_N = 81.0          # N added to the pole by the core at 35 m/s (FND-CAL-001 section D)
 FND_ALLOW_MW = 100.0       # FieldNode design sensor allowance (115 mW ceiling)
 # The core wakes for each 1 s level frame on the UART
@@ -101,11 +103,11 @@ TURB_I = 0.2                          # turbulence intensity at 4 m in a street 
 WIND_FLAG = 5.0                       # m/s, R11 threshold
 ANEMO_COST, ANEMO_MASS = 25.0, 0.15   # cup anemometer with pulse output (indicative, unchecked)
 # Mass densities (g/cm3) and bought-part masses (kg)
-RHO_AL, RHO_ASA, RHO_FOAM = 2.70, 1.07, 0.030
-M_MIC, M_PROC, M_SPIKE, M_CABLE, M_HW = 0.005, 0.010, 0.006, 0.090, 0.050
+RHO_AL, RHO_ASA, RHO_FOAM, RHO_SS = 2.70, 1.07, 0.030, 7.90
+M_MIC, M_PROC, M_CABLE, M_HW = 0.005, 0.010, 0.090, 0.030
 MASS_LIMIT = 3.5          # kg, R10 relaxed from 3.0 kg under NSM-DDR-002 (O2 option c)
 
-print("NoiseMap sizing, NSM-CAL-001 v0.2")
+print("NoiseMap sizing, NSM-CAL-001 v0.3")
 print(f"Geometry from cad/src/model.py: pole {P['pole_od']} mm, microphone {P['mic_z']:.0f} mm up and "
       f"{P['mic_off']:.0f} mm off the pole face, arm {D['arm_len']:.0f} mm, head {P['head']} mm")
 
@@ -292,24 +294,34 @@ res("R11", "Wind: level-based flag (Z weighted band below 40 Hz and its 1 s spre
 
 # ---------------------------------------------------------------- H. Mechanics (R10)
 print("\nH. Mechanics")
-parts = {k: s for k, _, s, _, _, _ in build_parts()}
-vol = {k: parts[k].volume / 1e3 for k in parts}
-solid = {k: s for k, _, s, _, _, _ in build_parts({**P, "pocket": False}) if k in ("arm", "adapter")}
+C = build_components()
+KG = {"al": RHO_AL / 1e6, "ss": RHO_SS / 1e6, "asa": RHO_ASA / 1e6, "foam": RHO_FOAM / 1e6, "nylon": 1.15e-6}  # kg/mm3
+V = lambda *ks: sum(C[k].shape.volume for k in ks)  # noqa: E731
 m_add = {
-    "arm, saddle and band": vol["arm"] * RHO_AL / 1e3,
-    "head housing": vol["head"] * RHO_ASA / 1e3,
+    "arm saddle, tube, flange and fixings": V("saddle", "tube", "flange") * KG["al"] + V("flange_fix") * KG["ss"],
+    "arm bands and lanyard": V("s_bands", "lanyard") * KG["ss"],
+    "head housing, cap and bolts": V("head", "cap") * KG["asa"] + V("head_bolt", "cap_screws") * KG["ss"],
     "microphone and processor boards": M_MIC + M_PROC,
-    "windscreen and spike": vol["windscreen"] * RHO_FOAM / 1e3 + M_SPIKE,
-    "sensor cable": M_CABLE,
-    "street pole adapter": vol["adapter"] * RHO_AL / 1e3,
-    "hardware and lanyard": M_HW,
+    "windscreen and spike": V("windscreen") * KG["foam"] + V("spike") * KG["ss"],
+    "sensor cable and gland": M_CABLE + V("gland") * KG["nylon"],
+    "street pole V-blocks and screws": V("vblock_low", "vblock_up") * KG["al"] + V("vb_screws") * KG["ss"],
+    "street pole bands": V("vb_bands") * KG["ss"],
+    "ties, tape and small parts": M_HW,
 }
-m_total = FND_MASS + sum(m_add.values())
+# FieldNode core on a street pole: the base node of FND-CAL-001 v0.3 [F1] less its small-pole
+# V-blocks and bands, which NoiseMap leaves off (NSM-DDR-003)
+import fieldnode_core as fnc  # noqa: E402
+_fc = fnc.build_components()
+fn_vb = (_fc["vblock_low"].shape.volume + _fc["vblock_up"].shape.volume) * KG["al"]
+FND_STREET = FND_MASS - fn_vb - FND_BANDS
+m_total = FND_STREET + sum(m_add.values())
 tag("H1", "Added to FieldNode: " + "; ".join(f"{k} {v:.3f} kg" for k, v in m_add.items()))
-tag("H2", f"FieldNode core {FND_MASS} kg + NoiseMap {sum(m_add.values()):.2f} kg = {m_total:.2f} kg against {MASS_LIMIT} kg")
-heavy = m_total + sum((solid[k].volume - parts[k].volume) / 1e3 * RHO_AL / 1e3 for k in solid)
-tag("H2b", f"Pocketing saves {heavy - m_total:.3f} kg: V-blocks {(solid['adapter'].volume - parts['adapter'].volume) / 1e6 * RHO_AL:.3f} kg, "
-           f"saddle {(solid['arm'].volume - parts['arm'].volume) / 1e6 * RHO_AL:.3f} kg; solid blocks and saddle would give {heavy:.2f} kg")
+tag("H2", f"FieldNode core {FND_MASS} kg less its V-blocks {fn_vb:.3f} kg and bands {FND_BANDS} kg = {FND_STREET:.2f} kg; "
+          f"+ NoiseMap {sum(m_add.values()):.2f} kg = {m_total:.2f} kg against {MASS_LIMIT} kg")
+v_full = V("vblock_low", "vblock_up") / P["vb"][2] * 20.0
+holes = 8 * math.pi / 4 * P["vb_hole_d"] ** 2 * P["vb"][2]
+tag("H2b", f"V-blocks: 16 mm bar instead of 20 mm and four 14 mm holes each save "
+           f"{((v_full + holes * 20 / P['vb'][2]) - V('vblock_low', 'vblock_up')) * KG['al']:.3f} kg; saddle in 2.5 mm sheet")
 q = 0.5 * RHO * Q_GUST ** 2
 ao, aw = P["arm"][0] / 1e3, P["arm"][1] / 1e3
 L = D["arm_len"] / 1e3
@@ -321,7 +333,7 @@ f_ws = q * CD_SPHERE * math.pi * (P["ws_d"] / 2e3) ** 2
 tag("H3", f"q = {q:.0f} Pa at {Q_GUST:.0f} m/s: arm {f_arm:.1f} N, head tube {f_head:.1f} N, windscreen {f_ws:.1f} N")
 x_tip = L
 m_wind = f_arm * L / 2 + (f_head + f_ws) * x_tip
-m_head = (m_add["head housing"] + M_MIC + M_PROC + m_add["windscreen and spike"])
+m_head = (m_add["head housing, cap and bolts"] + M_MIC + M_PROC + m_add["windscreen and spike"])
 m_tube = math.pi / 4 * (ao ** 2 - (ao - 2 * aw) ** 2) * L * RHO_AL * 1e3
 m_grav = 9.81 * (m_head * x_tip + m_tube * L / 2)
 m_comb = math.hypot(m_wind, m_grav)
@@ -337,18 +349,21 @@ defl = (f_head + f_ws) * L ** 3 / (3 * E_AL * I) + f_arm * L ** 3 / (8 * E_AL * 
 tag("H5", f"Arm stiffness {k / 1e3:.1f} kN/m, tip deflection in the gust {defl * 1e3:.2f} mm; first mode {fn:.0f} Hz; "
           f"vortex shedding matches it at {fn * ao / STROUHAL:.1f} m/s on the arm and {fn * hd / STROUHAL:.1f} m/s on the head")
 twist = f_arm * (D["r"] / 1e3 + L / 2) + (f_head + f_ws) * (D["r"] / 1e3 + L)
-cap = MU * 2 * PRELOAD * D["r"] / 1e3
-tag("H6", f"Twist on the arm clamp {twist:.2f} N m against {cap:.1f} N m of friction (factor {cap / twist:.1f}); "
-          f"slip {9.81 * (m_head + m_add['arm, saddle and band']):.1f} N against {MU * 2 * PRELOAD:.0f} N")
+N_ARM_BANDS = 2                       # two bands on the arm saddle (NSM-DDR-003)
+cap = N_ARM_BANDS * MU * 2 * PRELOAD * D["r"] / 1e3
+m_arm = m_add["arm saddle, tube, flange and fixings"] + m_add["arm bands and lanyard"]
+tag("H6", f"Twist on the arm clamp {twist:.2f} N m against {cap:.1f} N m of friction from two bands (factor {cap / twist:.1f}); "
+          f"slip {9.81 * (m_head + m_arm):.1f} N against {N_ARM_BANDS * MU * 2 * PRELOAD:.0f} N")
 tag("H7", f"Load added to the pole: FieldNode {FND_WIND_N:.0f} N + NoiseMap {f_arm + f_head + f_ws:.0f} N = {FND_WIND_N + f_arm + f_head + f_ws:.0f} N at about 3.5 to 4 m")
 for dpole in P["pole_range"]:
     rr = dpole / 2
     t = rr / math.sqrt(2)
-    band = 1.5 * math.pi * rr + 2 * P["vb"][1]
-    tag("H8", f"Pole {dpole:.0f} mm: contact {t:.1f} mm along each V face (face length {D['notch_depth'] * math.sqrt(2):.1f} mm); band about {band:.0f} mm")
-tag("H8b", f"Largest pole the 100 mm V seats: {2 * D['notch_depth'] * math.sqrt(2) * 1:.0f} mm")
+    band = 1.5 * math.pi * rr + 2 * P["vb"][1] + 2 * P["band_slot_x"]
+    tag("H8", f"Pole {dpole:.0f} mm: V contacts {t:.1f} mm either side of the centre line (V-block mouth half width "
+              f"{D['v_half_mouth']:.1f} mm, saddle {D['s_half_mouth']:.1f} mm); adapter band about {band:.0f} mm")
+tag("H8b", f"Largest pole whose contacts stay 3 mm inside both mouths: {min(D['max_pole_vb'], D['max_pole_saddle']):.0f} mm")
 mass_ok = m_total <= MASS_LIMIT
-res("R10", f"{m_total:.2f} kg with pocketed V-blocks and saddle ({heavy:.2f} kg solid); arm factor {FY_AL / sigma:.0f} on yield; clamp twist factor {cap / twist:.1f}; fits 60 to 140 mm poles",
+res("R10", f"{m_total:.2f} kg with the constructable adapter and saddle; arm factor {FY_AL / sigma:.0f} on yield; clamp twist factor {cap / twist:.1f}; fits 60 to 140 mm poles",
     f"{MASS_LIMIT} kg or less; 35 m/s gusts; two people in 45 min",
     (f"Met on paper on mass ({m_total:.2f} kg, margin {MASS_LIMIT - m_total:.2f} kg)" if mass_ok else f"Not met on mass ({m_total:.2f} kg)")
     + "; wind met on paper; install time not verifiable at TRL 3")
@@ -361,11 +376,13 @@ core = sum(v for k, v in cost.items() if k <= 6)
 own = sum(v for k, v in cost.items() if k > 6)
 budget_usd = yaml.safe_load((ROOT / "project.yaml").read_text())["budget_usd"]
 tag("I1", f"{len(bom)} BOM lines, all priced: FieldNode core (lines 1 to 6) ${core:.2f}; NoiseMap parts (lines 7 to 14) ${own:.2f}; full node ${core + own:.2f}")
-tag("I2", f"Against budget_usd ${budget_usd}: NoiseMap parts {own / budget_usd * 100:.0f} % (margin ${budget_usd - own:.2f}); "
-          f"full node ${core + own - budget_usd:.2f} over")
+tag("I2", f"Value-engineering target (budget_usd, a hypothetical control target, not a limit): USD {budget_usd}. "
+          f"Estimated cost of the constructable NoiseMap parts: USD {own:.2f} (USD {budget_usd - own:.2f} under the target); "
+          f"the full node with the FieldNode core is USD {core + own:.2f}")
 tag("I3", f"Rejected option (NSM-DDR-002, O3) with a cup anemometer for R11: NoiseMap parts ${own + ANEMO_COST:.2f}, mass {m_total + ANEMO_MASS:.2f} kg")
 res("R13", f"NoiseMap parts ${own:.2f}; full node ${core + own:.2f} with the FieldNode core (${core:.2f})",
-    f"NoiseMap parts ${budget_usd} or less per node; FieldNode core costed in FieldNode", "Met on paper")
+    f"NoiseMap parts at or under the ${budget_usd} value-engineering target; FieldNode core costed in FieldNode",
+    f"Met on paper (USD {budget_usd - own:.2f} under the value-engineering target)")
 
 # ---------------------------------------------------------------- J. Items settled by design or only by test
 res("R8", "FieldNode IP65 core; head with drip skirt, hydrophobic membrane and bored windscreen; IM72D128 is IP57 at part level",

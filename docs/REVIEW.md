@@ -1,5 +1,43 @@
 # Review note: NoiseMap
 
+## Session 2026-10-01: design for construction and build plan (kit 1.7.0)
+
+Kit 1.7.0 installed (`.kit/`, `.claude/commands/`, root `CLAUDE.md`). Following Amish's approval of the build plan format on 2026-09-30 and his instruction "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations", the design was checked for constructability with build123d and made buildable. Every change is in `docs/decisions/0003-design-for-construction.md` (NSM-DDR-003, draft, made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review).
+
+### Design changes made for construction
+
+- FieldNode core: the old FieldNode massing model is replaced by the constructable FieldNode (FND-DWG-001 Rev P3, copied unchanged into `cad/src/fieldnode_core.py`), built to FND-BLD-001 without its small-pole V-blocks and bands.
+- Street pole V-blocks: the milled, pocketed 110 x 60 x 40 mm blocks are replaced by 112 x 63 x 16 mm blocks sawn from bar with four drilled 14 mm holes, on the FieldNode plate's own V-block screw holes; the bands run under a rebate at each back corner and through the plate's own slots. No new holes in the FieldNode plate.
+- Arm saddle: the milled 10 mm plate with one band (which had no path) is replaced by a channel bent from 2.5 mm sheet with a V in each flange and two bands through slots in its web.
+- Arm fixings: a bought tube flange with an M5 cross bolt on the saddle; a socket printed on the head with an M4 cross bolt. The arm tube is now 383 mm; the microphone position is unchanged.
+- Head: card guides for the processor; two bosses, two M2 screws and a 0.5 mm gasket for the microphone board (keeping the 3 mm, 0.5 mm front cavity); a printed bottom cap with an M16 cable gland; the drip skirt given a 45 degree cone so it prints without support.
+- Windscreen bored 40 mm (was 41 mm, which nothing held); bird spike screwed into a boss on the skirt, 26 mm off the axis.
+- Safety lanyard and the sensor cable route modelled.
+- `cad/src/model.py` rewritten around components with 62 constructability checks (`python cad/src/model.py --check`), all passing. STEP and STL re-exported; NSM-DWG-001 Rev P2 to P3; concept media regenerated.
+
+### Results
+
+- Mass 3.45 kg against R10's 3.5 kg, margin 0.05 kg (unchanged). Arm stress factor 24 to 27; clamp twist factor 4.2 to 9.4; 96 N added to the pole.
+- Cost: value-engineering target USD 100 for the NoiseMap parts; estimated cost of the constructable design USD 72.00 (USD 28.00 under the target); full node USD 211.00 with the USD 139.00 FieldNode core. `budget_usd` unchanged.
+- Requirement status unchanged: 0 not met, 3 at risk (R3, R4, R5), 4 not verifiable at TRL 3, 4 met on paper, 4 met by design.
+
+### Documents
+
+- New: `docs/05-build-plan.md` (NSM-BLD-001 v0.1) with `docs/05-build-plan/` (overview, saddle blank, 8 joint close-ups, 12 step pictures, head wiring) and making sketches `cad/drawings/NSM-DWG-101` to `106` from `cad/src/build_plan_media.py`; `docs/06-design-decisions.md` (NSM-DEC-001 v0.1); NSM-DDR-003.
+- Revised: NSM-CAL-001 v0.3 (mass, arm, clamp and cost re-run; FieldNode mass from FND-CAL-001 v0.3); NSM-PRC-001, NSM-REQ-001 and NSM-PRB-001 v0.5; `bom/bom.csv` and `bom/bom-notes.md`; `README.md` (links line, "Building the prototype", figures); `project.yaml` (`design_state: constructable`, evidence).
+
+### Proposed, awaiting Amish
+
+See the design decisions register: accept NSM-DDR-003; bird spike position (recommendation: the side spike as modelled, measured at TRL 4); the 0.05 kg mass margin (recommendation: accept, weigh at TRL 4); O1 co-design partner and street; the M12 pinout (FieldNode's open decision).
+
+### Stale, to update on Amish's Mac
+
+`media/render-hero.png`, `media/render-exploded.png`, `media/render-detail.png`, `media/card.png`, `media/social-preview.png` and `cad/src/product_model.py` still show the concept saddle, V-blocks, head and FieldNode bracket. The design changed visibly, so they need re-rendering with Blender.
+
+### Recommended next step
+
+Amish's review of NSM-DDR-003 and the open items in NSM-DEC-001. TRL 4 stays on hold; nothing here was built or bought.
+
 ## Session 2026-09-25: recommendations accepted
 
 On 2026-09-25 Amish wrote: "i accept all your recommendations, go with them across all repos." Every NoiseMap item with a recommendation is now **decided by Amish, 2026-09-25: go with recommendation**. The decisions are recorded in `docs/decisions/0002-recommendations-accepted.md` (NSM-DDR-002 v0.1), and NSM-DDR-001 is revised to v0.2.
