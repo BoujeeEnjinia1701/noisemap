@@ -3,9 +3,9 @@ doc_id: NSM-PRC-001
 title: NoiseMap design precis
 project: NoiseMap
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Design made constructable (NSM-DDR-003); mass, cost and arm figures from NSM-CAL-001 v0.3; budget as a value-engineering target
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: M12 pinout and first co-design partner to approach, decided on 2026-10-02 (NSM-DEC-001)
 ---
 
 # NoiseMap design precis
@@ -64,7 +68,7 @@ Table 1. Main components. Numbers match the exploded view (Figure 3), `cad/src/m
 | 9 | MEMS microphone | Adapter board for an ICS-43434 (I²S, 65 dB SNR, [TDK InvenSense](https://invensense.tdk.com/products/ics-43434/)) or an IM72D128 (PDM, 72 dB(A) SNR, [DNMS](https://github.com/hbitter/DNMS)) | D3; the ICS-43434 is listed end of life |
 | 10 | Level processor | Cortex-M4F class low-power board (STM32L4 class) with I²S and PDM inputs and read-out protection | D4 |
 | 11 | Windscreen and bird spike | 90 mm open-cell foam ball bored 41 mm, stainless spike | Replace about yearly (estimate) |
-| 12 | Sensor cable | M12 5-pin, about 1.5 m, 3.3 V, ground and UART | FieldNode port; pinout follows FieldNode O2 |
+| 12 | Sensor cable | M12 5-pin, about 1.5 m, 3.3 V, ground and UART | FieldNode port: pin 1 at 3.3 V, pin 3 ground, pins 2 and 4 the UART pair, on FieldNode's candidate pinout, which NoiseMap asks FieldNode to adopt (decided 2026-10-02) |
 | 14 | Street pole adapter | Two 90° aluminum V-blocks 112 x 63 x 16 mm sawn from bar, on the FieldNode back plate's own screw holes, and two long stainless bands through its slots | Seats 60 to 140 mm poles; replaces FieldNode's 40 to 60 mm V-blocks |
 
 Line 13 of the BOM (fasteners, safety lanyard, ties, tape) has no callout.
@@ -133,7 +137,7 @@ All of these are decided by Amish, 2026-09-25: go with recommendation (NSM-DDR-0
 
 ## Open questions
 
-- First co-design partner and street (NSM-DDR-001 O1). Proposed, awaiting Amish.
+- First co-design partner and street (NSM-DDR-001 O1): decided 2026-10-02; the first candidate to approach is a city environmental noise team or a university acoustics group that can put a Class 1 reference sound level meter beside the node on the test street; a Sensor.Community group is a useful second contact for volunteer hosts. Not yet agreed.
 - Beyond TRL 3, on hold: measure the response of the chosen microphone in the printed head with membrane and windscreen, the windscreen insertion loss, the wind-band threshold against an anemometer, and the site reflection correction.
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).

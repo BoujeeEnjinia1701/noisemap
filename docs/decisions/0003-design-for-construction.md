@@ -3,9 +3,9 @@ doc_id: NSM-DDR-003
 title: NoiseMap design for construction
 project: NoiseMap
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction and open for his review
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: Accepted by Amish, including the recommendations for A1 and A2
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-01
-- **Status:** draft. Every change in Tables 1 and 2 was made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. The items in Table 3 are proposed, awaiting Amish.
+- **Status:** accepted. Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." This covers every change in Tables 1 and 2 and the recommendations for A1 and A2 in Table 3, now decided as recommended and recorded in the design decisions register (NSM-DEC-001). Every change was made under Amish's 2026-09-30 instruction to make the design physically buildable.
 
 ## Context
 
@@ -54,16 +58,17 @@ The changes keep what NoiseMap does: the microphone port 4.0 m up, 0.45 m from t
 | Drawing | NSM-DWG-001 Rev P2 to P3; making sketches NSM-DWG-101 to 106 added. | Follows the model. |
 | Documents | NSM-CAL-001 v0.3; NSM-PRC-001 and NSM-REQ-001 updated for the new figures. No requirement changed status. | Follows the model. |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Proposed for Amish; A1 and A2 accepted as recommended on 2026-10-02.*
 
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
-| A1 | The bird spike now stands 26 mm off the microphone axis instead of on it, inside the windscreen. A 3 mm rod that close may change the response slightly at the highest frequencies. | (a) the side spike as modelled, and measure the response with and without it at TRL 4; (b) no spike, and replace the foam more often; (c) a spike on a wire hoop clipped to the skirt, clear of the foam. | (a): it is the simplest fixing, and the response is already to be measured at TRL 4 (R5 at risk). |
-| A2 | The R10 mass margin is still 0.05 kg on catalogue masses. | (a) accept, weigh the prototype at TRL 4; (b) look for more mass now (a 2 mm saddle saves about 0.03 kg). | (a). |
+| A1 | The bird spike now stands 26 mm off the microphone axis instead of on it, inside the windscreen. A 3 mm rod that close may change the response slightly at the highest frequencies. | (a) the side spike as modelled, and measure the response with and without it at TRL 4; (b) no spike, and replace the foam more often; (c) a spike on a wire hoop clipped to the skirt, clear of the foam. | (a): it is the simplest fixing, and the response is already to be measured at TRL 4 (R5 at risk). Accepted by Amish, 2026-10-02. |
+| A2 | The R10 mass margin is still 0.05 kg on catalogue masses. | (a) accept, weigh the prototype at TRL 4; (b) look for more mass now (a 2 mm saddle saves about 0.03 kg). | (a). Accepted by Amish, 2026-10-02. |
 
 ## Consequences
 
-- `design_state: constructable` in `project.yaml`. The build plan NSM-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`); open items are in the design decisions register NSM-DEC-001.
+- `design_state: constructable` in `project.yaml`. The build plan NSM-BLD-001 shows every component and step in pictures generated from the model (`cad/src/build_plan_media.py`); decisions are indexed in the design decisions register NSM-DEC-001.
+- With A1 and A2 accepted, the side spike stays as modelled and its effect on the response is measured at TRL 4, and the prototype is weighed at TRL 4 against R10.
 - Requirement status is unchanged: 0 not met, 3 at risk (R3, R4, R5), 4 not verifiable at TRL 3, 4 met on paper, 4 met by design (NSM-CAL-001 v0.3).
 - The photoreal renders (`media/render-*.png`), `media/card.png`, `media/social-preview.png` and the appearance model `cad/src/product_model.py` still show the concept arm saddle, V-blocks, head and FieldNode bracket; they need updating on Amish's Mac, where Blender is.
 - If FieldNode changes its back plate, the V-block screw holes, the band slots or the clamp heights, the street pole V-blocks must follow, and `cad/src/fieldnode_core.py` must be copied again.

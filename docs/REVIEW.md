@@ -273,3 +273,41 @@ This is an appearance model only: no tolerances, no fabrication detail, no PCB l
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-02: open decisions decided
+
+On 2026-10-02 Amish approved every recommendation written for the open decisions: "i approve your recommendations for all 555 open decisions." Nothing was built or tested; TRL 4 remains on hold.
+
+### Decisions recorded
+
+5 decisions moved from "Open decisions" to "Decisions made" in the design decisions register, dated 2026-10-02. Design for construction (NSM-DDR-003) accepted with its items A1 and A2; a city noise team or university acoustics group with a Class 1 reference meter named as the first partner to approach; FieldNode's candidate M12 pinout adopted for NoiseMap's port.
+
+### Documents changed
+
+- `docs/01-problem.md` (NSM-PRB-001 v0.6)
+- `docs/02-concept.md` (NSM-PRC-001 v0.6)
+- `docs/05-build-plan.md` (NSM-BLD-001 v0.2)
+- `docs/06-design-decisions.md` (NSM-DEC-001 v0.2)
+- `docs/decisions/0001-trl2-review-decisions.md` (NSM-DDR-001 v0.3)
+- `docs/decisions/0002-recommendations-accepted.md` (NSM-DDR-002 v0.2)
+- `docs/decisions/0003-design-for-construction.md` (NSM-DDR-003 v0.2)
+- `README.md` (not a controlled document)
+- `docs/pdf/`: every controlled document re-rendered.
+
+### Follow-up actions to carry approved decisions into the design
+
+The model, drawings, build plan pictures, BOM quantities and prices, and calculations were not changed in this session. These actions carry the approved decisions into them:
+
+1. Decision 5 (docs): Cross-repo: ask FieldNode to adopt its candidate M12 pinout for both ports (pin 1 switched rail, pin 2 data A, pin 3 ground, pin 4 data B, pin 5 analog) and to label each port with its rail voltage; NoiseMap's port is set to 3.3 V.
+2. Decision 5 (drawings): Show the M12 pin assignment (pin 1 at 3.3 V, pin 3 ground, pins 2 and 4 UART) on the wiring diagram and in the build plan's cable step, and add a 3.3 V port label.
+3. Decision 5 (bom): BOM line 12: name the pin assignment in the sensor cable description at the next revision.
+4. Decision 2 (docs): TRL 4 test plan (when TRL 4 starts): measure the response with and without the side spike.
+5. Decision 3 (docs): TRL 4 test plan: weigh the prototype against R10 (3.5 kg).
+6. Decision 1 (pictures): At the next render session on Amish's Mac, redraw the photoreal renders, card and social preview to the constructable design (arm saddle, V-blocks, head and FieldNode bracket).
+
+### Points found in the review
+
+Raised when the recommendations were written (2026-10-01) and not yet acted on:
+
+- Cross-repo: each FieldNode port's rail voltage is chosen at build, and NoiseMap needs 3.3 V where SlopeWatch needs 12 V on the same pin; ports should be labelled with their rail voltage so a 3.3 V sensor is never plugged into a 12 V port.
+- Renders still show the concept arm saddle, V-blocks, head and FieldNode bracket.

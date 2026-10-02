@@ -3,9 +3,9 @@ doc_id: NSM-PRB-001
 title: NoiseMap problem statement
 project: NoiseMap
 doc_type: Problem statement
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Cost figures from NSM-CAL-001 v0.3; budget as a value-engineering target
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: First co-design partner to approach, decided on 2026-10-02 (NSM-DEC-001)
 ---
 
 # NoiseMap problem statement
@@ -88,14 +92,14 @@ No open, solar-powered, LoRaWAN street node that is designed never to store or t
 
 This design is for communities the author is not part of, so requirements come from the people who will use it.
 
-- [ ] Identify a local partner organization (Helpful Engineering network, NGO or university)
+- [ ] Identify a local partner organization. First candidate to approach (decided 2026-10-02, not yet agreed): a city environmental noise team or a university acoustics group that can put a Class 1 reference sound level meter beside the node on the test street; a Sensor.Community group is a useful second contact for volunteer hosts
 - [ ] Run co-design sessions with intended users; record who, where and what was learned
 - [ ] Validate load, distance, terrain and cost assumptions in the field
 - [ ] Revise requirements (REQ) from findings before freezing the design
 
 ## Open questions
 
-- Which partner and street first: a residents' association in a nightlife district, a city noise team or a university? Proposed, awaiting Amish (NSM-DDR-001 O1).
+- Which partner and street first? Decided by Amish on 2026-10-02 (NSM-DDR-001 O1): the first candidate to approach is a city environmental noise team or a university acoustics group that can put a Class 1 reference sound level meter beside the node on the test street; a Sensor.Community group is a useful second contact for volunteer hosts. Not yet agreed with any partner.
 - 1-minute detail: fifteen 1-minute LAeq values in each 15-minute record. Decided by Amish, 2026-09-25: go with recommendation (NSM-DDR-001 D5).
 - Low-frequency levels for amplified bass: LCeq in each record. Decided by Amish, 2026-09-25: go with recommendation (D5, D12).
 - Public notice: a plate on each pole saying what is measured, with a link to this repository. Decided by Amish, 2026-09-25: go with recommendation (D8).

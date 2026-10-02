@@ -74,7 +74,7 @@ The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric mo
 
 ## Building the prototype
 
-The [prototype build plan](docs/05-build-plan.md) (NSM-BLD-001) shows how to make each component and fit it to the next, with a making sketch for every made part and a picture for every assembly step. The FieldNode core is built to its own plan and gets two larger V-blocks sawn from aluminium bar in place of its own; the arm saddle is bent from sheet by a local shop; the head and its cap are printed in ASA; the rest is bought. The work needs basic metalwork, 3D printing and fine soldering, and no certified trade. Decisions still open are in the [design decisions register](docs/06-design-decisions.md).
+The [prototype build plan](docs/05-build-plan.md) (NSM-BLD-001) shows how to make each component and fit it to the next, with a making sketch for every made part and a picture for every assembly step. The FieldNode core is built to its own plan and gets two larger V-blocks sawn from aluminium bar in place of its own; the arm saddle is bent from sheet by a local shop; the head and its cap are printed in ASA; the rest is bought. The work needs basic metalwork, 3D printing and fine soldering, and no certified trade. Every decision is indexed in the [design decisions register](docs/06-design-decisions.md).
 
 ![NoiseMap prototype: every component pulled apart and numbered in build order](docs/05-build-plan/overview.png)
 

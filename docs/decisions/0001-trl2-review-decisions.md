@@ -3,9 +3,9 @@ doc_id: NSM-DDR-001
 title: NoiseMap TRL 2 review decisions
 project: NoiseMap
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 decided by Amish on 2026-10-02 (recommendation approved, NSM-DEC-001)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted. On 2026-09-25 Amish accepted all recommendations ("i accept all your recommendations, go with them across all repos"). D1 to D13 and O2 to O4 are decided by Amish, 2026-09-25: go with recommendation (see NSM-DDR-002). O1 has no recommendation and remains "Proposed, awaiting Amish".
+- **Status:** accepted. On 2026-09-25 Amish accepted all recommendations ("i accept all your recommendations, go with them across all repos"). D1 to D13 and O2 to O4 are decided by Amish, 2026-09-25: go with recommendation (see NSM-DDR-002). O1 had no recommendation then; it was decided on 2026-10-02, when Amish approved the recommendation later written for it ("i approve your recommendations for all 555 open decisions."; NSM-DEC-001).
 
 ## Context
 
@@ -56,7 +60,7 @@ The options for each item are those in `docs/REVIEW.md` (session 2026-09-25, /po
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First co-design partner and street (review item 9, problem statement). No recommendation was made. | Proposed, awaiting Amish |
+| O1 | First co-design partner and street (review item 9, problem statement). No recommendation was made. | Decided by Amish, 2026-10-02 (recommendation approved, NSM-DEC-001): first partner to approach is a city environmental noise team or a university acoustics group that can put a Class 1 reference sound level meter beside the node on the test street; a Sensor.Community group is a useful second contact for volunteer hosts |
 | O2 | R10 mass: the node is 3.32 kg against 3 kg (NSM-CAL-001 section H). Options: (a) pocket the V-blocks and saddle (about 3.10 kg, still over); (b) relax R10 to 3.5 kg; (c) both. Recommendation: (c). New at TRL 3. | Decided by Amish, 2026-09-25: go with recommendation (c); applied under NSM-DDR-002 |
 | O3 | R11 wind flag method: (a) level-based flag from a Z-weighted band below 40 Hz, no cost; (b) add a cup anemometer on FieldNode's second port (about $25, 0.15 kg, which worsens O2). Rain is flagged on the server from weather data in both. Recommendation: (a), with a field comparison to set the threshold. New at TRL 3. | Decided by Amish, 2026-09-25: go with recommendation (a); the field comparison is TRL 4 work, on hold |
 | O4 | R12 at SF10 and slower: lengthen the interval automatically (24 min at SF10, 87 min at SF12) on The Things Network, as FieldNode proposes. New at TRL 3; follows the FieldNode decision. | Decided by Amish, 2026-09-25: go with recommendation; interval rule written into NSM-PRC-001 and NSM-REQ-001 |

@@ -3,9 +3,9 @@ doc_id: NSM-DDR-002
 title: NoiseMap recommendations accepted
 project: NoiseMap
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record Amish's acceptance of all recommendations and the changes made in this repo
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: O1 decided by Amish on 2026-10-02 (recommendation approved, NSM-DEC-001)
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted. Every item below with a recommendation is decided by Amish, 2026-09-25: go with recommendation. Items without a recommendation remain "Proposed, awaiting Amish".
+- **Status:** accepted. Every item below with a recommendation is decided by Amish, 2026-09-25: go with recommendation. O1, which had no recommendation, was decided on 2026-10-02 (NSM-DEC-001).
 
 ## Context
 
@@ -43,11 +47,11 @@ On 2026-09-25 Amish wrote: "i accept all your recommendations, go with them acro
 | O3 | R11 wind flag method | Option (a): level-based flag from the Z-weighted band below 40 Hz; rain flagged on the server | No anemometer added. NSM-PRC-001 and NSM-REQ-001 state the method; NSM-CAL-001 records the anemometer as a rejected option. The field comparison that sets the threshold is TRL 4 work, on hold |
 | O4 | R12 airtime at SF10 and slower | Lengthen the interval automatically: 24 min at SF10, 48 min at SF11, 87 min at SF12 | Firmware rule written into NSM-PRC-001 (how it works, step 5) and NSM-REQ-001 R12. NSM-CAL-001 [F2c]: at most 30.0 s/day at every spreading factor; R12 at risk to met on paper. Aligns with FieldNode's interval item (cross-repo action) |
 
-*Table 2. Items still open.*
+*Table 2. Item left open here, decided on 2026-10-02.*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | First co-design partner and street. No recommendation was made. | Proposed, awaiting Amish |
+| O1 | First co-design partner and street. No recommendation was made. | Decided by Amish, 2026-10-02 (recommendation approved, NSM-DEC-001): first partner to approach is a city environmental noise team or a university acoustics group that can put a Class 1 reference sound level meter beside the node on the test street; a Sensor.Community group is a useful second contact for volunteer hosts |
 
 ## Consequences
 

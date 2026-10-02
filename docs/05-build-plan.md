@@ -3,9 +3,9 @@ doc_id: NSM-BLD-001
 title: NoiseMap prototype build plan
 project: NoiseMap
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-01'
     author: Amish Chadha
     change: First build plan at TRL 3, with pictures by component and step; design made constructable (NSM-DDR-003)
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: NSM-DDR-003 accepted by Amish on 2026-10-02
 ---
 
 # NoiseMap prototype build plan
@@ -31,7 +35,7 @@ The prototype is one NoiseMap node on a 1.2 m length of 114 mm tube standing in 
 
 ## 2. What changed to make it buildable
 
-The concept showed what the node does; some of its parts could not be made or fixed as drawn. Each change below keeps what the node does, and all of them are recorded in decision record NSM-DDR-003, open for Amish's review.
+The concept showed what the node does; some of its parts could not be made or fixed as drawn. Each change below keeps what the node does, and all of them are recorded in decision record NSM-DDR-003, accepted by Amish on 2026-10-02.
 
 *Table 1. Changes from the concept.*
 

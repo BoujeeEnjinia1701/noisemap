@@ -3,9 +3,9 @@ doc_id: NSM-DEC-001
 title: NoiseMap design decisions register
 project: NoiseMap
 doc_type: Design decisions register
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
     date: '2026-10-01'
     author: Amish Chadha
     change: Register opened with the build plan; budget treated as a value-engineering target
+  - version: "0.2"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: Amish approved the recommendations for open decisions 1 to 5 (NSM-DDR-003 accepted); moved to decisions made
 ---
 
 # NoiseMap design decisions register
@@ -21,13 +25,7 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-| # | Decision needed | Options | Recommendation | Affects in the build | Source |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Accept the design for construction | Accept the changes P1 to P11 as made, or ask for changes | Accept: each keeps what the node does, and the model's 62 constructability checks pass | Every made component and joint | NSM-DDR-003 |
-| 2 | Bird spike position | (a) side spike in the skirt boss, 26 mm off the microphone axis, as modelled, and measure the response with and without it at TRL 4; (b) no spike, change the foam more often; (c) a spike on a wire hoop clipped to the skirt | (a) | Spike, skirt boss (sections 3.5 and 3.10) | NSM-DDR-003, A1 |
-| 3 | R10 mass margin of 0.05 kg | (a) accept and weigh the prototype at TRL 4; (b) look for more mass now, for example a 2 mm saddle (about 0.03 kg) | (a) | None now | NSM-DDR-003, A2 |
-| 4 | First co-design partner and street | Partner and site to be named | None yet | Pole size and site checks at installation; not part of the bench build | NSM-DDR-001, O1 |
-| 5 | M12 sensor port pin assignment | Agreed across FieldNode's adopting projects (FieldNode's own open decision) | None yet; NoiseMap needs 3.3 V, ground and one UART pair | Which conductor goes where at the FieldNode end of the cable | FieldNode FND-DDR-001, O2 |
+None. All open decisions were decided on 2026-10-02.
 
 ## To confirm when parts are bought
 
@@ -56,5 +54,10 @@ Value-engineering target: USD 100 for the NoiseMap parts (a hypothetical control
 | 2026-09-25 | TRL 2 review items D1 to D13: budget scope (NoiseMap parts only), privacy resting on open firmware, dual-footprint microphone, processing in the head, 15-minute records, shared calibrator, public notice, standard FieldNode core, microphone 4.0 m up and 0.45 m off the pole, A and C weighting, printed ASA head | Amish: "i accept all your recommendations, go with them across all repos." | NSM-DDR-001, NSM-DDR-002 |
 | 2026-09-25 | R10 relaxed to 3.5 kg with lighter V-blocks and saddle (O2); level-based wind flag (O3); interval rule at slow data rates (O4) | Amish, same instruction | NSM-DDR-002 |
 | 2026-09-30 | FieldNode core made constructable (the core NoiseMap now uses) | Amish: "i accept your recommended changes on design that are currently being sent across for my approval" | FieldNode FND-DDR-003 |
-| 2026-09-30 | Make every design physically buildable while drawing the build plan; keep open decisions out of the build plan | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | NSM-DDR-003 (changes open for review, item 1 above) |
+| 2026-09-30 | Make every design physically buildable while drawing the build plan; keep open decisions out of the build plan | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | NSM-DDR-003 (changes accepted on 2026-10-02, below) |
 | 2026-10-01 | `budget_usd` is a value-engineering target, not a limit | Amish: "the budgets are a hypothethical control target to ensure we are thinking along a value engineering lens" | This register, NSM-CAL-001 v0.3 |
+| 2026-10-02 | Design for construction accepted: the changes P1 to P11, as made | Amish: "i approve your recommendations for all 555 open decisions." | NSM-DDR-003 |
+| 2026-10-02 | Bird spike: the side spike in the skirt boss, 26 mm off the microphone axis, as modelled; the response is measured with and without it at TRL 4 | Amish: "i approve your recommendations for all 555 open decisions." | NSM-DDR-003, A1 |
+| 2026-10-02 | R10 mass margin of 0.05 kg accepted; the prototype is weighed at TRL 4 | Amish: "i approve your recommendations for all 555 open decisions." | NSM-DDR-003, A2 |
+| 2026-10-02 | First co-design partner to approach: a city environmental noise team or a university acoustics group that can put a Class 1 reference sound level meter beside the node on the test street; a Sensor.Community group is a useful second contact for volunteer hosts | Amish: "i approve your recommendations for all 555 open decisions." | NSM-DDR-001, O1 |
+| 2026-10-02 | M12 sensor port pinout: ask FieldNode to adopt its own candidate pinout for both ports (pin 1 switched rail, pin 2 data A, pin 3 ground, pin 4 data B, pin 5 analog); NoiseMap uses pin 1 at 3.3 V, pin 3 ground and pins 2 and 4 for the UART pair | Amish: "i approve your recommendations for all 555 open decisions." | FieldNode FND-DDR-001, O2 |
