@@ -311,3 +311,35 @@ Raised when the recommendations were written (2026-10-01) and not yet acted on:
 
 - Cross-repo: each FieldNode port's rail voltage is chosen at build, and NoiseMap needs 3.3 V where SlopeWatch needs 12 V on the same pin; ports should be labelled with their rail voltage so a 3.3 V sensor is never plugged into a 12 V port.
 - Renders still show the concept arm saddle, V-blocks, head and FieldNode bracket.
+
+## Session 2026-10-02: approved follow-ups carried out
+
+Amish, 2026-10-02, approved that every follow-up action from the open-decision sign-off be carried out. trl stays 3; no build or test work was done. Documents changed, with new versions: NSM-BLD-001 v0.3. Also changed: `bom/bom.csv` (lines 12 and 13) and `bom/bom-notes.md`; `cad/src/build_plan_media.py` (wiring picture), `cad/src/sheets.py` (NSM-DWG-001 Rev P4), `cad/src/concept_media.py`, `cad/src/product_model.py`.
+
+### Approved follow-ups carried out
+
+1. **Decision 5, ask FieldNode to adopt its pinout and label each port with its rail voltage: not done here, listed under Cross-repo actions.** NoiseMap's side is done: it uses pin 1 at 3.3 V, pin 3 ground and pins 2 and 4 for the UART pair, and its port is labelled 3.3 V.
+2. **Decision 5, pin assignment on the wiring diagram and in the cable step, and a 3.3 V port label: done.** Figure 13 (`docs/05-build-plan/wiring.png`) shows the pin numbers and a "PORT A: 3.3 V" label; build plan 3.8 step 3, step 12 and safety stop S1 name the pins and the label; the GA sheet notes the pins; the appearance model carries the label beside port A.
+3. **Decision 5, BOM line 12 names the pin assignment: done.** The label is in line 13 (about USD 0.50, inside the line's price). No price changed.
+4. **Decision 2, TRL 4 test plan: measure the response with and without the side spike: not done, TRL 4 work (no test plans at the TRL 3 cap).**
+5. **Decision 3, TRL 4 test plan: weigh the prototype against R10: not done, TRL 4 work.**
+6. **Decision 1, appearance model for the constructable design: done.** `cad/src/product_model.py` now uses the built back plate (window, band slots), the side bird spike in its skirt boss with the matching windscreen, the built head gland, and adds the enclosure lugs and screws, cable glands, bracket and panel bolts; the concept hex bolts and the concept saddle fixings are gone. Render scenes exported (hero, exploded, detail views as listed in the file) to `/home/claude/renders/noisemap`. The photoreal renders, card and social preview are made on Amish's Mac next.
+
+### Key results
+
+- Requirement status changes: none (3 at risk, 4 not verifiable, 4 met on paper, 4 met by design, as before). Calculations re-run: output unchanged.
+- Value-engineering target: USD 100. Estimated cost of the constructable design: USD 72 (USD 28 under the target). Mass unchanged at about 3.45 kg (R10 3.5 kg).
+- Model: 62 constructability checks pass; the model did not change.
+- Pictures regenerated: wiring diagram (Figure 13), NSM-DWG-001 (Rev P4), the concept media (blueprint, hero, cutaway, exploded, flow, viewer).
+
+### Cross-repo actions
+
+- **FieldNode (`fieldnode`):** adopt its candidate M12 pinout for both sensor ports (pin 1 switched rail, pin 2 data A, pin 3 ground, pin 4 data B, pin 5 analog), and label each port with its rail voltage, so that a 3.3 V sensor such as NoiseMap is never plugged into a 12 V port such as SlopeWatch's. Publish the pinout in the FieldNode documents.
+
+### Proposed, awaiting Amish
+
+- The approved decision fixes the pins (1, 3, and 2 and 4 as the UART pair) but not which of pins 2 and 4 carries the head's transmit. The wiring diagram and build plan put the head's transmit (levels out) on pin 2 (data A) and its receive on pin 4 (data B). Recommendation: accept, and confirm with FieldNode's firmware at TRL 4.
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

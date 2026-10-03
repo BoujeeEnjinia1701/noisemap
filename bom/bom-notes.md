@@ -9,3 +9,4 @@ Costs are indicative (September 2026 estimates) until suppliers are selected. Li
 - The V-blocks (line 14) are sawn from 16 mm bar with four drilled lightening holes, and the arm saddle (line 7) is bent from 2.5 mm sheet with two bands and a bought tube flange (NSM-DDR-003).
 - A sound calibrator (94 dB at 1 kHz) is a shared lab tool and is not in the per-node cost (D7).
 - The street pole is not part of the BOM.
+- Line 12 names the M12 pin assignment (pin 1 3.3 V, pin 3 ground, pins 2 and 4 UART) and line 13 adds the 3.3 V port label, both from the decision of 2026-10-02 (NSM-DEC-001); neither changes a price.

@@ -3,7 +3,7 @@ doc_id: NSM-BLD-001
 title: NoiseMap prototype build plan
 project: NoiseMap
 doc_type: Build plan
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: NSM-DDR-003 accepted by Amish on 2026-10-02
+  - version: "0.3"
+    date: '2026-10-02'
+    author: Amish Chadha
+    change: M12 pin assignment (pin 1 3.3 V, pin 3 ground, pins 2 and 4 UART) shown on the wiring diagram and in the cable step; 3.3 V port label added to step 12 and the hardware line; Figure 13 redrawn
 ---
 
 # NoiseMap prototype build plan
@@ -187,7 +191,7 @@ The pole end goes to the bottom of the tube flange's socket with its hole lined 
 
 ![Figure 13. Head wiring](05-build-plan/wiring.png)
 
-*Figure 13. Block-level wiring of the head.*
+*Figure 13. Block-level wiring of the head, with the M12 pin numbers and the 3.3 V label for the FieldNode's port A.*
 
 **What it is.** A Cortex-M4F class low-power board (STM32L4 class) with an I2S or PDM input, a UART and read-out protection, no storage and no radio, at most 26 wide and 70 long.
 
@@ -211,7 +215,7 @@ The pole end goes to the bottom of the tube flange's socket with its hole lined 
 
 1. Print the cap disc down, without supports.
 2. Fit the gland through the cap's hole from below, nut inside the ring.
-3. Pass the cable's open end up through the gland and the cap. Strip it and solder 3.3 V, ground, transmit and receive to the processor board (Figure 13). Write the colour of each conductor on a label at both ends; the fifth conductor is not used in the head.
+3. Pass the cable's open end up through the gland and the cap. Strip it and solder the conductors that go to M12 pin 1 (3.3 V), pin 3 (ground), pin 2 (the processor's transmit, levels out) and pin 4 (its receive) to the processor board (Figure 13). Pin 2 and pin 4 are the UART pair of the FieldNode's own pinout. Write the colour of each conductor on a label at both ends; the fifth conductor (pin 5, analog) is not used in the head.
 4. Push the cap's ring into the head, lining up the screw holes, and fit two M3 x 6 screws through the wall into the ring. Tighten the gland on the cable.
 
 **Check before moving on.** The cap sits flat against the end of the head; the cable cannot be pulled through the gland by hand.
@@ -328,7 +332,7 @@ Loop the wire rope round the pole about 120 above the arm and round the arm besi
 
 ![Step 12](05-build-plan/step-12.png)
 
-Plug the cable into the core's port A. Run it up the side of the pole away from the core, outside the saddle and along the side of the arm, and tie it every 150 or so with UV-stable ties. Leave a drip loop under the head so that rain runs off the loop, not into the gland.
+Before plugging in, check that port A is set to the 3.3 V rail and carries the 3.3 V label from the hardware line; stick the label beside the port if it is missing. Then plug the cable into the core's port A. Run it up the side of the pole away from the core, outside the saddle and along the side of the arm, and tie it every 150 or so with UV-stable ties. Leave a drip loop under the head so that rain runs off the loop, not into the gland.
 
 ## 5. First checks
 
@@ -352,7 +356,7 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 
 Stop at each point. Carry on only when everything listed is true.
 
-- **S1. Before the cable is powered.** The head wiring is checked against Figure 13 with a meter; 3.3 V and ground are not swapped; the bench supply is limited to 100 mA. The FieldNode cell stays out until the FieldNode plan's own stops pass.
+- **S1. Before the cable is powered.** The head wiring is checked against Figure 13 with a meter; 3.3 V is on M12 pin 1 and ground on pin 3, and they are not swapped; the bench supply is limited to 100 mA. The FieldNode cell stays out until the FieldNode plan's own stops pass.
 - **S2. Before the node goes on the pole stub.** Every screw and bolt tight with its nyloc nut or threadlocker; edges deburred; all four bands through their slots. The stub is clamped in a stand that cannot tip under the node's 3.5 kg held 0.5 m off its axis.
 - **S3. Before any calibrator or loudspeaker test.** Hearing protection on; the calibrator's level is the 94 dB setting.
 - **S4. Before any outdoor installation (outside this plan).** The pole owner's written permission; a lift or a stable ladder with a second person; fall protection and traffic management; clear of overhead lines and the pole's electrical hatch; the owner has checked the pole can take about 96 N of added wind load 3.5 to 4 m up; the lanyard fitted; a public notice on the pole saying what is measured.

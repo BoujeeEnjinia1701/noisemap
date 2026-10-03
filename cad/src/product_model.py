@@ -12,8 +12,9 @@ street pole (114.3 mm design case).
 APPEARANCE MODEL ONLY: no tolerances, no fabrication detail. CONCEPT, NOT FOR FABRICATION.
 
 Every main dimension, height and interface comes from PARAMS, derived() and build_parts() in
-model.py (same axes: pole on the Z axis, sidewalk at Z = 0, street toward +X). The adapter,
-bracket, arm and head reuse the model.py solids unchanged.
+model.py (same axes: pole on the Z axis, sidewalk at Z = 0, street toward +X). The back plate,
+adapter, bracket, arm, head, gland, lugs and fixings reuse the model.py solids unchanged (constructable
+design, NSM-DDR-003); the plate, V-blocks and arm saddle are no longer the concept shapes.
 
     from product_model import product_parts
     for p in product_parts(): print(p["name"], p["group"], p["material"])
@@ -26,7 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build123d import (Align, Axis, Box, Cylinder, Plane, Pos, RegularPolygon, Rot, Solid, Sphere, Text,
                        Vector, extrude, fillet)
-from model import PARAMS, derived, build_parts
+from model import PARAMS, derived, build_parts, build_components
 
 _FONT = Path(__file__).resolve().parents[2] / ".kit" / "fonts" / "IBMPlexSans-SemiBold.ttf"
 
@@ -145,8 +146,16 @@ def _text_nx(txt, size, x, y, z, h=0.3):
     return pl * t
 
 
+def _text_nz(txt, size, x, y, z, h=0.3):
+    """Raised text on a face that looks down (-Z), centred on (x, y)."""
+    t = extrude(Text(txt, font_size=size, font_path=str(_FONT), align=(Align.CENTER, Align.CENTER)), amount=h)
+    pl = Plane(origin=(x, y, z), x_dir=(0, 1, 0), z_dir=(0, 0, -1))
+    return pl * t
+
+
 def product_parts(P=PARAMS):
     D = derived(P)
+    Cm = build_components(P)
     model = {k: s for k, _, s, _, _, _ in build_parts(P)}
     out = []
 
@@ -235,6 +244,13 @@ def product_parts(P=PARAMS):
     cap = _zcyl(xm, py1, z0 - 17.0, 9.0, 12.0)
     cap = _fillet_try(cap, _faces_min(cap, Axis.Z), [2.0, 1.0])
     add("Spare M12 port dust cap", cap, C_DARK, "rubber", 2, "shell", E_BODY)
+    # port A rail-voltage label on the bottom face beside the port (decision of 2026-10-02: NoiseMap's port is 3.3 V)
+    lab_x = xm + 28.0
+    add("Port A label plate", _bx(lab_x - 13, lab_x + 13, py0 - 10, py0 + 10, z0 - 0.4, z0), C_LABEL, "paper", 2, "shell", E_BODY)
+    add("Port A label print (3.3 V)", _text_nz("A  3.3 V", 6.0, lab_x, py0, z0 - 0.4), C_DARK, "paper", 2, "shell", E_BODY)
+    # enclosure lugs, glands and fixings as built (FieldNode BOM lines 1 and 2, model.py)
+    add("Enclosure lugs (4) and M5 screws", Cm["fn_lugs"].shape + Cm["fn_lug_screws"].shape, C_ALU2, "metal", 1, "shell", E_BODY)
+    add("Enclosure cable glands (2 x M16)", Cm["fn_glands"].shape, C_DARK, "plastic", 1, "shell", E_BODY)
     vent = _hex_z(xm - 22, 20, z0 - 1.5, 12.0, 3.0) + (Pos(xm - 22, 20, z0 - 3.0) * Sphere(5.0)
                                                          & _bx(xm - 30, xm - 14, 12, 28, z0 - 9, z0 - 3))
     add("Enclosure vent (ePTFE)", vent, C_ALU2, "plastic", 1, "shell", E_BODY)
@@ -274,20 +290,9 @@ def product_parts(P=PARAMS):
     cradle -= _bx(cx_ - 20, cx_ + 20, -30, 30, z0 + wt + 4, cz_)
     add("Cell cradle with fuse", cradle, C_DARK, "plastic", 3, "internal", E_CELL)
 
-    # back plate (BOM 6), model.py envelope, rounded corners, bolt heads for the V-blocks
-    plw, plh, plt = P["plate"]
-    pz0 = z0 - P["plate_drop"]
-    plate = _bx(D["plate_back"], D["plate_front"], -plw / 2, plw / 2, pz0, pz0 + plh)
-    plate = _fillet_try(plate, plate.edges().filter_by(Axis.X), [10.0, 6.0])
-    add("FieldNode back plate", plate, C_ALU, "metal", 6, "shell", (-60, 0, 0))
-    bolts = None
-    for dz in P["clamp_dz"]:
-        zc = z0 + dz + P["band_w"] / 2
-        zb = zc - 16 if dz < 0 else zc + 16
-        for y in (-40.0, 40.0):
-            b = _hex_x(D["plate_back"] - 1.5, y, zb, 10.0, 3.0)
-            bolts = b if bolts is None else bolts + b
-    add("V-block bolts", bolts, C_STEEL, "metal", 13, "shell", (-60, 0, 0))
+    # back plate (BOM 6): the built plate with its window, band slots and fixing holes; the V-blocks
+    # fix to it with the M4 countersunk screws of the adapter group
+    add("FieldNode back plate", model["plate"], C_ALU, "metal", 6, "shell", (-60, 0, 0))
 
     # street pole adapter (BOM 14): model.py V-blocks and bands unchanged, band clamp bolts
     add("Street pole adapter (V-blocks and bands)", model["adapter"], C_ALU2, "metal", 14, "shell", (0, 0, 0))
@@ -327,17 +332,13 @@ def product_parts(P=PARAMS):
 
     # tilt bracket (BOM 5): model.py posts and struts
     add("Panel tilt bracket", model["bracket"], C_ALU2, "metal", 5, "shell", (-120, 0, 170))
+    add("Bracket and panel clip bolts", Cm["fn_bracket_bolts"].shape + Cm["fn_panel_bolts"].shape, C_STEEL, "metal", 5, "shell", (-120, 0, 170))
 
     # ------------------------------------------------------------ street side: arm and head
     hx = D["head_x"]
     htop, hbot = D["head_top"], D["head_bot"]
     az = D["arm_z"]
     add("Microphone arm, saddle and band", model["arm"], C_ALU, "metal", 7, "shell", (0, 0, 0))
-    hs = _box(-r - 4.5, 0, az, 9.0, 14.0, 14.0)
-    hs = _fillet_try(hs, hs.edges().filter_by(Axis.X), [2.0, 1.0])
-    hs += _xcyl(-r - 11.0, 0, az, 3.0, 6.0)
-    hs += _zcyl(hx + P["head"][0] / 2 + 8.0, 0, az, 3.2, 8.0) + _hex_x(hx + P["head"][0] / 2 + 5.0, 0, az, 8.0, 4.0)
-    add("Arm band clamp and collar screw", hs, C_STEEL, "metal", 7, "shell", (0, 0, 0))
 
     E_HEAD = (230, 0, 70)
     head = model["head"]
@@ -349,20 +350,11 @@ def product_parts(P=PARAMS):
     ring_z = htop - P["skirt_dz"] - P["skirt"][1] / 2 - 3.0
     ring = _zcyl(hx, 0, ring_z, hd / 2 + 0.5, 3.0) - _zcyl(hx, 0, ring_z, hd / 2 - 0.5, 4.0)
     add("Head accent ring", ring, C_ACCENT, "painted", 8, "shell", E_HEAD)
-    gl = _hex_z(hx, 0, hbot - 3.0, 16.0, 6.0) - _zcyl(hx, 0, hbot - 3.0, 3.8, 8.0)
-    add("Head cable gland", gl, C_DARK, "plastic", 8, "shell", E_HEAD)
+    add("Head cable gland (M16, in the bottom cap)", Cm["gland"].shape, C_DARK, "plastic", 12, "shell", E_HEAD)
 
     # windscreen and bird spike (BOM 11), model.py sizes
-    wsz = D["ws_center_z"]
-    bore_z0 = wsz - P["ws_d"] / 2 - 2
-    ws = Pos(hx, 0, wsz) * Sphere(P["ws_d"] / 2)
-    ws -= _zcyl(hx, 0, (bore_z0 + htop + 0.5) / 2, P["ws_bore"] / 2, htop + 0.5 - bore_z0)
-    add("Foam windscreen", ws, C_FOAM, "fabric", 11, "shell", (230, 0, 230))
-    sl, sd = P["spike"]
-    sp = _zcyl(hx, 0, wsz + P["ws_d"] / 2 - 5 + sl / 2 + 2.5, sd / 2, sl + 5)
-    sp = _fillet_try(sp, _faces_max(sp, Axis.Z), [1.2, 0.8])
-    sp += _zcyl(hx, 0, wsz + P["ws_d"] / 2 + 1.0, 4.0, 3.0)
-    add("Bird spike", sp, C_STEEL, "metal", 11, "shell", (230, 0, 300))
+    add("Foam windscreen", Cm["windscreen"].shape, C_FOAM, "fabric", 11, "shell", (230, 0, 230))
+    add("Bird spike (in the skirt boss, 26 mm off the axis)", Cm["spike"].shape, C_STEEL, "metal", 11, "shell", (230, 0, 300))
 
     # microphone on its adapter board (BOM 9) and level processor (BOM 10), model.py positions
     add("MEMS microphone on adapter board", model["mic"], C_PCB, "plastic", 9, "internal", (230, 0, -110))

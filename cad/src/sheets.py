@@ -1,4 +1,4 @@
-"""NoiseMap general arrangement drawing NSM-DWG-001 (Rev P3).
+"""NoiseMap general arrangement drawing NSM-DWG-001 (Rev P4).
 
 Run from the repo root:  python cad/src/sheets.py
 Builds cad/drawings/NSM-DWG-001.svg, .pdf and .png from the parametric model (cad/src/model.py).
@@ -23,11 +23,12 @@ work = ROOT / "cad/drawings/_views"
 views = project_views(asm, work)
 
 s = Sheet(project="NoiseMap", title="General arrangement, street pole node", dwg_no="NSM-DWG-001",
-          rev="P3", author="Amish Chadha", date="2026-10-01", concept=True,
+          rev="P4", author="Amish Chadha", date="2026-10-02", concept=True,
           material="Saddle, tube, V-blocks Al; head ASA; bands stainless. See bom/bom.csv",
           revisions=[("P1", "Preliminary GA from model.py (NSM-CAL-001)", "2026-09-25", "AC"),
                      ("P2", "Pocketed V-blocks and saddle; V notch corrected (NSM-DDR-002)", "2026-09-25", "AC"),
-                     ("P3", "Design for construction (NSM-DDR-003)", "2026-10-01", "AC")])
+                     ("P3", "Design for construction (NSM-DDR-003)", "2026-10-01", "AC"),
+                     ("P4", "M12 pin assignment and 3.3 V port label (2026-10-02)", "2026-10-02", "AC")])
 s.add_ortho(views, ["front", "top", "right"])
 s.add_svg(views["iso"], 276, 38, 140, 78, label="Isometric view", sublabel="Not to scale")
 s.add_notes("Key dimensions and interfaces (mm)", [
@@ -42,7 +43,7 @@ s.add_notes("Key dimensions and interfaces (mm)", [
     "FieldNode core per FND-DWG-001 Rev P3, without its",
     "  small-pole V-blocks and bands",
     "Core and arm turn independently about the pole",
-    "M12 5-pin cable 1.5 m: 3.3 V, GND, UART 9,600 baud",
+    "M12 cable 1.5 m: pin 1 3.3 V, 3 GND, 2 and 4 UART",
     "Mass about 3.45 kg (NSM-CAL-001 v0.3; R10 3.5 kg)",
     "PRELIMINARY, NOT FOR FABRICATION",
 ], x=276, y=128, width=140)

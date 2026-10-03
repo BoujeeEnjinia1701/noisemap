@@ -74,7 +74,7 @@ def data_and_energy_flow(out):
     ax.text(0.15, 1.25, "Data: the head firmware sends levels only", fontsize=9.5, fontweight="bold", color=INK)
     row(0.2, [("MEMS microphone", "24-bit I2S or PDM, 48 kHz\n1.15 Mbit/s, RAM only"),
               ("Level processor", "A and C weighting,\nFast time weighting"),
-              ("Levels over M12", "12-byte frame each second\n120 bit/s on a 9.6 kbit/s UART"),
+              ("Levels over M12", "pin 1 3.3 V, 3 ground, 2 and 4 UART;\n12-byte frame a second, 120 bit/s"),
               ("FieldNode core", "15 min record, 22 bytes\n1 min LAeq, L10, L90, max"),
               ("TwinKit or city server", "levels and device\nhealth only")],
         [7, 4, 1.5, 1.5])

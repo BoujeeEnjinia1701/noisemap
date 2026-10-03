@@ -474,6 +474,7 @@ def wiring():
     ax.text(2, 60, "NoiseMap prototype: head wiring", fontsize=13, fontweight="bold", color=INK, va="top")
     ax.text(2, 56.6, "Block level. The head has no storage and no radio; only level frames leave it, on the UART pair. "
             "Stranded copper, 0.25 mm² (24 AWG) throughout.", fontsize=8.5, color=MUT, va="top")
+    ax.text(2, 53.4, "M12 pins: 1 = 3.3 V, 2 and 4 = UART pair, 3 = ground, 5 not used. Port A on the FieldNode is labelled 3.3 V.", fontsize=8.5, color=MUT, va="top")
     ax.text(2, 1.5, "BUILD PLAN ILLUSTRATION, PLAN NOT YET BUILT", fontsize=7, color="#B45309")
     ax.text(118, 1.5, "github.com/BoujeeEnjinia1701/noisemap", fontsize=7, color="#0F766E", ha="right", family="monospace")
     ax.add_patch(FancyBboxPatch((3, 10), 58, 40, boxstyle="round,pad=0.4", fc="#F0FDFA", ec="#0F766E", lw=1, ls="--"))
@@ -495,7 +496,9 @@ def wiring():
     blk(6, 30, 18, 14, "Microphone board", "ICS-43434 (I2S) or\nIM72D128 (PDM),\nunder the port", "#7C3AED")
     blk(34, 16, 22, 28, "Level processor", "Cortex-M4F board\nI2S or PDM in\nUART out, 9,600 baud\nread-out protection\nno storage, no radio", "#2563EB")
     blk(66, 22, 14, 16, "Cable gland", "M16, in the\nbottom cap", "#1F2937")
-    blk(90, 18, 26, 24, "FieldNode core", "sensor port A (M12)\n3.3 V rail, ground,\nUART to the\ncontroller", "#9CA3AF")
+    blk(90, 18, 26, 24, "FieldNode core", "sensor port A (M12)\nset to the 3.3 V rail,\nlabelled 3.3 V", "#9CA3AF")
+    ax.add_patch(FancyBboxPatch((95, 11.2), 16, 4.2, boxstyle="round,pad=0.2", fc="white", ec=INK, lw=1.2))
+    ax.text(103, 13.3, "PORT A: 3.3 V", fontsize=8, fontweight="bold", color=INK, ha="center", va="center")
     # microphone to processor
     wire([(24, 41), (34, 41)], RED); lab(29, 43, "3.3 V", RED, "center")
     wire([(24, 38), (34, 38)], GRY); lab(29, 39.5, "ground", GRY, "center")
@@ -503,11 +506,13 @@ def wiring():
     wire([(24, 32), (34, 32)], BLU); lab(29, 33.5, "data", BLU, "center")
     ax.text(15, 27, "four short leads,\nabout 60 mm", fontsize=7.2, color=MUT, ha="center", va="top")
     # processor to cable
-    for i, (name, col) in enumerate((("3.3 V", RED), ("ground", GRY), ("TX (levels out)", BLU), ("RX", BLU))):
+    for i, (name, pin, col) in enumerate((("3.3 V", "pin 1", RED), ("TX (levels out)", "pin 2", BLU), ("ground", "pin 3", GRY), ("RX", "pin 4", BLU))):
         y = 37 - i * 4
         wire([(56, y), (66, y)], col)
         wire([(80, y), (90, y)], col)
-        lab(85, y + 1.6, name, col, "center")
+        lab(61, y + 1.6, name, col, "center")
+        lab(85, y + 1.6, pin, col, "center")
+    ax.text(73, 14.2, "pin 5 (analog): not connected", fontsize=7, color=MUT, ha="center", va="top")
     ax.text(73, 20, "M12 5-pin cable,\nabout 1.5 m", fontsize=7.2, color=MUT, ha="center", va="top")
     ax.text(4, 7.5, "Record the colour of each conductor on the label at both ends. The fifth conductor is not connected in the head.",
             fontsize=7.6, color=INK)
