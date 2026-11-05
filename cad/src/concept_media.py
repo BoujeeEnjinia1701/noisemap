@@ -1,7 +1,8 @@
 """NoiseMap concept media (TRL 3), built from the parametric model in cad/src/model.py.
 
 Run from the repo root:  python cad/src/concept_media.py
-Main dimensions and interfaces only; not for fabrication.
+Kit 1.9: draws the detailed D3 model, components(CHOSEN). `--web-only` rewrites only the 3D viewer model.
+Not for fabrication.
 
 The model has the street pole on the Z axis with the sidewalk surface at z = 0 and the street
 toward +X. The FieldNode core hangs on the back of the pole, and the microphone head sits on its
@@ -17,10 +18,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / ".kit"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build123d import Box, Pos
+from build123d import Box, Pos, Rot
 import concept
 from concept import Part, render_all, human_figure
-from model import PARAMS as P, derived, build_parts, pole, patch_svg_export
+from model import PARAMS as P, derived, components, CHOSEN, pole, patch_svg_export
 patch_svg_export()
 
 import matplotlib
@@ -31,8 +32,11 @@ from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 D = derived(P)
 CURB_X = D["r"] + 450.0            # curb 0.45 m in front of the pole face
 SW = 150.0                          # curb height; road surface at z = -150
+TILT = 0.006                        # degrees off-axis: keeps the hidden-line projection of the D3 model from stalling
 
-parts = [Part(name, shape, colour, bom, explode) for _, name, shape, colour, bom, explode in build_parts()]
+# kit 1.9: the media draw components(CHOSEN), every screw, nut, band and board its own solid (not the legacy grouped model)
+parts = [Part(c["name"], Rot(TILT, TILT, 0) * c["shape"], c["color"], c["bom"], c["explode"])
+         for c in components(CHOSEN) if c["kind"] != "context"]
 for _p in parts:                    # keep the level processor board inside the frame of the exploded view
     if _p.name.startswith("Level processor"):
         _p.explode = (380, 0, -140)
@@ -101,15 +105,18 @@ if __name__ == "__main__":
     import os
     os.chdir(ROOT)
     concept.ROOT = ROOT
+    if "--web-only" in sys.argv:       # second pass: only media/model.glb and viewer.html (about 15 MB, under 20 MB)
+        concept.export_web_model(parts, "media", title="NoiseMap: Level-only noise node concept")
+        sys.exit(0)
     render_all(
         parts, project="NoiseMap", title="Level-only noise node concept", dwg_no="NSM-DWG-010",
         key_figures=["Microphone 4.0 m up, 0.45 m off the pole face",
                      "LAeq, LAFmax, L10, L90, LCeq; 22-byte 15 min records",
                      "Head sends levels only; audio stays in its RAM",
                      "12.2 mW; 53 days without sun (NSM-CAL-001)",
-                     "Range 34.9 (27.9 with IM72D128) to 113 dBA",
+                     "Range 27.9 dBA to 119 dB SPL (IM72D128, fitted by default)",
                      "NoiseMap parts $72 (VE target $100); node $211"],
-        date="2026-10-01",
+        date="2026-11-02", rev="P2",
         scale_figure=False, context=context,
         cut_exclude=["Solar panel, 6 W", "Panel tilt bracket", "Street pole adapter, V-blocks and bands", "Sensor cable, M12"],
     )

@@ -3,9 +3,9 @@ doc_id: NSM-DEC-001
 title: NoiseMap design decisions register
 project: NoiseMap
 doc_type: Design decisions register
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-02'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: Amish approved the recommendations for open decisions 1 to 5 (NSM-DDR-003 accepted); moved to decisions made
+  - version: "0.3"
+    date: '2026-11-02'
+    author: Amish Chadha
+    change: Kit 1.9.1 upgrade; concept selection proposed (NSM-DDR-004); two fixes made under the fix rule (microphone, joint sealing); PR-003 and PR-002 proposals added
 ---
 
 # NoiseMap design decisions register
@@ -25,7 +29,20 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-None. All open decisions were decided on 2026-10-02.
+Decisions below are proposed and not decided.
+
+| # | Decision needed | Options | Recommendation | Affects in the build | Source |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Which concept is carried forward | A pole clamp node; B balcony post node; C luminaire socket node; or A with B as a companion | Proposed, awaiting Amish: A (171) and B (163) are within 10 %, so no pick; C (152) not recommended | If A: nothing changes. If B or C: BOM, calculations and build plan for that option are new work | NSM-OPT-001, NSM-DDR-004 |
+
+Decided under Amish's standing fix-rule instruction of 2026-10-23 (two fixes, both kept inside the working principle and recorded in NSM-STM-001): (1) the Infineon IM72D128 microphone is fitted by default in place of the ICS-43434, because the ICS-43434 clips at 113 dB SPL, which is only 103 to 108 dBA for traffic and is below the 110 dBA target (PR-004); the board is the dual-footprint one already decided (D3), so no part count changes; (2) every stainless screw, bolt and band that touches aluminium is sealed with neutral-cure silicone or fitted with a nylon washer, to limit crevice and galvanic corrosion in road salt (STM S15). Nothing that changes the working principle, pitch or scope was done.
+
+Proposed, awaiting Amish (found by the independent STEM review, NSM-STM-001; they change targets, so they are not mine to make):
+
+| # | Decision needed | Options | Recommendation | Source |
+| --- | --- | --- | --- | --- |
+| 2 | PR-003 (total uncertainty of 2 dB or less) is not met on paper: the budget gives 2.9 to 3.1 dB | Keep 2 dB and add a Class 1 reference at TRL 4; or relax the target to 3 dB (indicative-grade) | Relax to 3 dB for the indicative claim and keep 2 dB as a TRL 4 goal | NSM-CAL-001, NSM-STM-001 S14 |
+| 3 | PR-002 (fifteen 1-minute LAeq values per 15-minute record) cannot be sent at LoRaWAN SF10 to SF12 inside the duty-cycle and airtime limits | Keep PR-002 at SF7 to SF9 only; or accept longer intervals at slow rates | Accept the interval rule at SF10 to SF12 and state PR-002 and PR-012 as met by design at SF7 to SF9 only | NSM-CAL-001, NSM-STM-001 |
 
 ## To confirm when parts are bought
 
@@ -38,6 +55,7 @@ None. All open decisions were decided on 2026-10-02.
 | 5 | The membrane's acoustic transparency and size from its maker's datasheet | It sits in the sound path; its effect is part of R5 | NSM-DDR-001, D13 |
 | 6 | 70 x 16 mm aluminium bar is stocked; if only 20 mm is, the blocks gain about 0.11 kg | The R10 margin is 0.05 kg | NSM-CAL-001, H2b |
 | 7 | The FieldNode back plate as built matches FND-DWG-101 (V-block screw holes 18 mm each side, band slots 51 mm each side, at 20 and 270 mm up) | The street pole V-blocks use those holes and slots | NSM-DDR-003, P2 |
+| 8 | The membrane or neutral-cure silicone is compatible with the stainless-aluminium joints, and nylon washers fit under the M4 and M5 heads | The sealing fix of STM S15 | NSM-STM-001, P4 |
 
 ## Value engineering
 

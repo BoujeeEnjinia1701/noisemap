@@ -3,9 +3,9 @@ doc_id: NSM-PRB-001
 title: NoiseMap problem statement
 project: NoiseMap
 doc_type: Problem statement
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-02'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: First co-design partner to approach, decided on 2026-10-02 (NSM-DEC-001)
+- version: "0.7"
+  date: '2026-11-02'
+  author: Amish Chadha
+  change: Kit 1.8 users-and-needs and stakeholders tables added; user types mapped to NSM-URS-001
 ---
 
 # NoiseMap problem statement
@@ -59,6 +63,29 @@ Continuous monitoring exists but is costly or intrusive. Certified class 1 monit
 | Licensing authorities and venue operators | Shared, trusted data to set and check conditions on late licences | Entertainment districts |
 | Researchers and students | Open, documented level data linked to health, sleep and urban form studies | Universities, public health programs |
 | Pole or asset owner | A light clamp-on device that needs no drilling or mains connection | Street lighting and signal poles |
+
+Table 1a. Users and needs (kit 1.8). UR numbers are in NSM-URS-001.
+
+| User type | Goals and needs | Typical use scenario | Pain points and challenges |
+| --- | --- | --- | --- |
+| Residents and residents' associations | Credible night-time evidence near their homes (UR-002, UR-003); sure the street is not recorded (UR-001); cheap enough to buy several (UR-014); notice on the pole (UR-016) | Present a month of levels to a council or licensing hearing | Uncalibrated phone readings are dismissed; fear of a microphone on a pole |
+| City environmental health or noise team | Continuous low-cost measurement to target enforcement and check complaints (UR-002, UR-004, UR-012) | Place nodes on nightlife and depot streets, check complaints the next morning | Officers arrive after the noise has stopped; certified terminals are few |
+| Transport and planning departments | Before and after evidence for calming, surfaces and truck routes (UR-002, UR-003) | Compare a school street before and after a speed limit | Modeled maps are five-yearly averages |
+| Licensing authorities and venue operators | Shared, trusted data to set and check late-licence conditions (UR-005, UR-006) | Check bass levels at 2 a.m. against a licence condition | Disputes about whose measurement counts |
+| Researchers and students | Open level data linked to sleep and urban form (UR-011, UR-015) | Download records, exclude wind-spoiled intervals | Closed data formats, unknown calibration |
+| Pole or asset owner | A light clamp-on device with no drilling or mains (UR-007, UR-008, UR-009) | Allow a node on a lighting or signal pole | Wind load, falling parts, liability, access to the pole's electrics |
+
+Table 1b. Stakeholders.
+
+| Stakeholder group | Role or interest | Engagement needed |
+| --- | --- | --- |
+| Co-design partner (city noise team or university acoustics group, not yet agreed) | Reviews requirements; provides a class 1 reference meter at TRL 4 | Approach first (decided 2026-10-02) |
+| Sensor.Community-style volunteer groups | Hosts and a second route to deployment | Second contact |
+| Pole and lighting asset owners | Permission, structural limits, access | Per site |
+| Data protection authorities and advisers | Review of the levels-only claim | Before any deployment (NSM-REG-001 G6) |
+| LoRaWAN network operators and The Things Network community | Shared airtime | Follow fair use (PR-012) |
+| FieldNode project | Supplies the power and radio core and the M12 pinout | Cross-repo (NSM-DEC-001) |
+| Amish Chadha | All decisions on scope, budget, safety trade-offs | Decision requests in NSM-PLN-001 |
 
 Operating context: clamped to an existing street pole with the microphone about 4 m above the ground (the 4.0 ± 0.2 m assessment height the EU uses for strategic noise maps, [Directive 2002/49/EC, Annex I](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32002L0049)), outdoors for years in sun, rain, dust, wind and temperatures from about -20 °C to +50 °C (estimate of the design range), usually with no daytime power at the pole.
 

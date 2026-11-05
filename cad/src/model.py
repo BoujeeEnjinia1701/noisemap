@@ -90,6 +90,13 @@ PARAMS = {
     "ws_d": 90.0, "ws_bore": 40.0, "ws_dz": 5.0, "spike": (160.0, 3.0, 26.0),
     # 12 sensor cable diameter; 13 lanyard wire diameter and its loop height above the arm axis
     "cable_d": 7.0, "lanyard": (2.0, 120.0, 135.0),
+    # ---- concept option B (balcony post node), mm; see nsm_options.py
+    "optB": {"post_od": 42.4, "post_t": 2.6, "post_h": 1100.0, "blk": (80.0, 30.0, 110.0), "land": 8.0, "slot_y": 30.0,
+             "band_dz": 42.0, "bolt_dz": 20.0, "box": (100.0, 80.0, 55.0), "wall": 3.0, "pcb": (70.0, 50.0),
+             "pcb_hole": (30.0, 20.0), "port_d": 3.0, "ws_r": 25.0, "cable_d": 5.0},
+    # ---- concept option C (luminaire socket node), mm; receptacle top at height z above the pavement
+    "optC": {"z": 6000.0, "od": 76.0, "wall": 3.0, "h": 60.0, "boss_r": 29.0, "pcb_r": 20.0, "pcb_d": 48.0,
+             "blade_w": 19.0, "blade_h": 14.0, "port_d": 3.0, "ws_r": 20.0, "ant_off": 27.0, "ant_h": 110.0},
 }
 
 BOM = {  # model key: (BOM line, name)
@@ -511,7 +518,7 @@ def build_components(p=PARAMS):
     loop = xcyl(lx - ld / 2, lx + ld / 2, 0, az, ao / 2 + ld) - xcyl(lx - ld, lx + ld, 0, az, ao / 2)
     wire = rod((rl, 0, az + lz), (lx, 0, az + ao / 2 + ld / 2), ld / 2)
     add("lanyard", "Safety lanyard", ring + loop + wire, "arm", "bought")
-    return C
+    return _enrich(C, p)
 
 
 def build_parts(p=PARAMS, C=None):
@@ -670,18 +677,117 @@ def print_checks(p=PARAMS, C=None):
     return n_ok == len(res)
 
 
+# ------------------------------------------------------------------ kit 1.9 interface
+OPTIONS = {"A": "Pole clamp node, solar and LoRaWAN",
+           "B": "Balcony post node, USB power and Wi-Fi",
+           "C": "Luminaire socket node, luminaire power and LoRaWAN"}
+PRINCIPLES = {
+    "A": "Clamps to a street pole with its own solar panel and cell; microphone 4 m up on an arm; levels over LoRaWAN.",
+    "B": "Clamps to a resident's balcony post; microphone and radio on one board in a box; USB power, levels over home Wi-Fi.",
+    "C": "Twist-locks into the street luminaire's photocontrol socket and takes luminaire power; microphone on top; LoRaWAN.",
+}
+CHOSEN = "A"
+_HERO_ARGS = ["--scene=outdoor", "--ground=concrete", "--ground-z=0", "--sun=38,-125", "--lens=50"]
+OPTION_VIEWS = {
+    "A": {"el": 14, "az": -140, "scale": "person", "ground_z": 0, "keep_context": True},
+    "B": {"el": 18, "az": -35, "scale": "person", "ground_z": 0, "keep_context": True},
+    "C": {"el": 12, "az": -140, "scale": "person", "ground_z": 0, "keep_context": True},
+}
+# touching fits that the check would otherwise count as overlaps (none expected; listed when found)
+ALLOWED_CONTACTS = []
+
+# model key -> (material, kind) for the legacy component dict; fixings are split into one part per screw or bolt
+_MAT = {
+    "fn_body": ("polycarbonate", "bought"), "fn_lid": ("polycarbonate", "bought"), "fn_lugs": ("polycarbonate", "bought"),
+    "fn_lug_screws": ("stainless", "fastener"), "fn_glands": ("nylon", "bought"), "fn_ports": ("brass", "bought"),
+    "fn_vent": ("nylon", "bought"), "fn_antenna": ("nylon", "bought"), "fn_mplate": ("asa", "made"),
+    "fn_mplate_screws": ("stainless", "fastener"), "fn_cell": ("cell", "bought"), "fn_power": ("pcb", "bought"),
+    "fn_ctrl": ("pcb", "bought"), "fn_connectors": ("chip", "bought"), "fn_plate": ("aluminium", "made"),
+    "fn_bracket_bolts": ("stainless", "fastener"), "fn_panel": ("panel", "bought"), "fn_panel_bolts": ("stainless", "fastener"),
+    "vblock_low": ("aluminium", "made"), "vblock_up": ("aluminium", "made"), "vb_screws": ("stainless", "fastener"),
+    "vb_bands": ("stainless", "bought"), "saddle": ("aluminium", "made"), "flange": ("cast_aluminium", "bought"),
+    "flange_fix": ("stainless", "fastener"), "tube": ("aluminium", "made"), "s_bands": ("stainless", "bought"),
+    "head": ("asa", "made"), "head_bolt": ("stainless", "fastener"), "cap": ("asa", "made"), "gland": ("nylon", "bought"),
+    "cap_screws": ("stainless", "fastener"), "mic": ("pcb", "bought"), "gasket": ("epdm", "bought"),
+    "mic_screws": ("stainless", "fastener"), "membrane": ("membrane", "bought"), "proc": ("pcb", "bought"),
+    "windscreen": ("foam", "bought"), "spike": ("stainless", "bought"), "cable": ("nylon", "bought"),
+    "lanyard": ("stainless", "bought"), "label": ("label", "bought"), "ties": ("nylon", "fastener"),
+}
+def _mat(key):
+    if key in _MAT:
+        return _MAT[key]
+    if key.startswith("fn_") and ("clip" in key or "post" in key or "strut" in key):
+        return ("aluminium", "made")
+    raise KeyError(key)
+
+
+def _enrich(C, p):
+    """Kit 1.9 detail on the constructable design: edge breaks on the made metal parts, the port label and
+    the cable ties of BOM line 13. Geometry and dimensions are otherwise unchanged (NSM-DDR-003)."""
+    import nsm_parts as N
+    from cad_parts import break_edges
+    for k in ("vblock_low", "vblock_up", "saddle", "tube"):
+        C[k].shape = break_edges(C[k].shape, 0.5)
+    C["spike"].shape = break_edges(C["spike"].shape, 0.8)        # pointed end of the bird spike
+    C["membrane"].shape = break_edges(C["membrane"].shape, 0.08)
+    D = derived(p)
+    # port label on the enclosure side face next to port A, 0.2 mm printed polyester
+    C["label"] = Comp("Port label, 3.3 V", _label(p, D), 13, "bought", "cable")
+    # three UV-stable cable ties round the sensor cable on its straight run up the pole
+    yc = D["r"] + p["cable_d"] / 2 + 2.0
+    ties = []
+    for zz in (p["enc_z0"] + 400.0, p["enc_z0"] + 900.0, p["enc_z0"] + 1400.0):
+        xs = -6.0 * (1 - (zz - (p["enc_z0"] - 60.0)) / (D["arm_z"] - 80.0 - (p["enc_z0"] - 60.0)))
+        ring = zcyl(xs, yc, zz, zz + 3.0, p["cable_d"] / 2 + 1.6) - zcyl(xs, yc, zz - 1, zz + 4.0, p["cable_d"] / 2 + 0.05)
+        ties.append(ring)
+    C["ties"] = Comp("Cable ties, 3", fuse(ties), 13, "fixing", "cable")
+    return C
+
+
+def _label(p, D):
+    from cad_parts import break_edges
+    """Port label: 20 x 8 mm, 0.2 mm, stuck on the enclosure side face (the -Y face) beside port A."""
+    y_face = -p["enc"][0] / 2
+    return break_edges(box(D["enc_front"] + 20, D["enc_front"] + 40, y_face - 0.2, y_face, p["enc_z0"] + 150, p["enc_z0"] + 158), 0.06)
+
+
+def _site_a(p):
+    """Street pole and pavement for the options picture (context only; see product_model.py for the hero site)."""
+    from cad_parts import part
+    D = derived(p)
+    return [part("Street pole, 114.3 mm (site)", zcyl(0, 0, -400.0, 5000.0, p["pole_od"] / 2), "galvanised", kind="context", group="context"),
+            part("Pavement slab (site)", box(-1500, 1500, -1500, 1500, -400.0, 0.0), "concrete", kind="context", group="context")]
+
+
+def components(option="A"):
+    """Parts of one option as cad_parts.part() dicts (kit 1.9). Option A is the current design, with each screw,
+    bolt and nut its own part; B and C are in nsm_options.py."""
+    from cad_parts import part
+    import nsm_parts as N
+    if option == "A":
+        out = []
+        for key, c in build_components().items():
+            mat, kind = _mat(key)
+            grp = c.group
+            if kind == "fastener":
+                base = c.name
+                for i, sol in enumerate(N.split_solids(c.shape), 1):
+                    out.append(part(f"{base} [{i}]", sol, mat, "fastener", bom=c.bom, group=grp))
+            else:
+                out.append(part(c.name, c.shape, mat, kind, bom=c.bom, group=grp, explode=EXPLODE.get(grp, (0, 0, 0))))
+        return out + _site_a(PARAMS)
+    import nsm_options
+    return {"B": nsm_options.option_b, "C": nsm_options.option_c}[option](PARAMS)
+
+
+def assembly_shape(option="A"):
+    """The option's non-context parts as one compound (the drawing script projects this)."""
+    from build123d import Compound
+    return Compound([q["shape"] for q in components(option) if q["kind"] != "context"])
+
+
 if __name__ == "__main__":
     C = build_components()
     if "--check" not in sys.argv:
-        from build123d import export_step, export_stl
-        root = Path(__file__).resolve().parents[1]
-        (root / "step").mkdir(exist_ok=True); (root / "stl").mkdir(exist_ok=True)
-        parts = build_parts(C=C)
-        for name, shape in assemblies(parts).items():
-            export_step(shape, str(root / "step" / f"{name}.step"))
-            export_stl(shape, str(root / "stl" / f"{name}.stl"), tolerance=0.2, angular_tolerance=0.3)
-            bb = shape.bounding_box()
-            print(f"{name:20s} {bb.size.X:7.1f} x {bb.size.Y:7.1f} x {bb.size.Z:7.1f} mm")
-        for k, n, s, _, bom, _ in parts:
-            print(f"  {bom:2d} {n:40s} volume {s.volume / 1e3:8.1f} cm3")
+        print("Export STEP with: python .kit/cad_check.py --export  (kit 1.9; STL with python cad/src/export_stl.py)")
     print_checks(C=C)

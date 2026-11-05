@@ -1,6 +1,6 @@
 id,value,target,status
-R3,Expanded uncertainty 2.9 dB (assumed terms); facade bias up to +2.4 dB before a site correction,+/-2 dB from 40 to 100 dBA after field calibration,At risk
-R4,ICS-43434 34.9 to 113 dBA; IM72D128 27.9 to 113 dBA (AOP assumed),35 to 110 dBA,At risk (no margin at 35 dBA with ICS-43434; met with IM72D128)
+R3,"Expanded uncertainty 2.9 dB (k = 2, assumed terms; 3.1 dB with the reference meter); facade bias up to +2.4 dB (+2.7 dB in a street canyon) before a site correction",+/-2 dB from 40 to 100 dBA after field calibration,Not met on paper (expanded uncertainty above the target on assumed terms; a site correction is TRL 4 work)
+R4,ICS-43434 34.9 dBA to 113 dB SPL (103 to 108 dBA for traffic); IM72D128 27.9 dBA to 119 dB SPL (109 to 114 dBA for traffic),35 to 110 dBA,"At risk (ICS-43434 misses 110 dBA for traffic spectra and has no margin at 35 dBA; the IM72D128, fitted by default, meets 110 dBA unless LZ exceeds LA by more than 9 dB)"
 R5,Roll-off -2.8 dB at 63 Hz before equalizing; residual 0.8 dB after; port resonance 36 kHz (+0.4 dB at 8 kHz); membrane and head diffraction unknown,"A and C weighting within class 2 limits, 63 Hz to 8 kHz","At risk (membrane, windscreen and head diffraction not verifiable at TRL 3)"
 R8,"FieldNode IP65 core; head with drip skirt, hydrophobic membrane and bored windscreen; IM72D128 is IP57 at part level",IP65; head survives driving rain; -20 to +50 C,Not verifiable at TRL 3 (by design)
 R9,Calibrator slides over the head after the windscreen is removed; offset stored in the head,Field check in 10 min or less; offset stored,Not verifiable at TRL 3 (timed trial)

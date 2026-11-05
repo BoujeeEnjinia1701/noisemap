@@ -43,9 +43,10 @@ def dbsum(*levels):
 # Microphones. ICS-43434 figures from the TDK product page; IM72D128 SNR and interface from the DNMS README.
 MICS = {
     "ICS-43434": {"snr": 65.0, "sens_dbfs": -26.0, "aop": 120.0, "f_lo": 60.0, "i_ma": 0.49, "if": "I2S"},
-    "IM72D128": {"snr": 72.0, "sens_dbfs": None, "aop": 120.0, "f_lo": 60.0, "i_ma": 1.0, "if": "PDM"},
+    "IM72D128": {"snr": 72.0, "sens_dbfs": None, "aop": 126.0, "f_lo": 60.0, "i_ma": 1.0, "if": "PDM"},
 }
-# Supply currents are typical class values, not checked. IM72D128 AOP and roll-off not checked: taken equal to ICS-43434.
+# Supply currents are typical class values, not checked. IM72D128 AOP 126 dB SPL at 1 % THD (128 at 10 %), SNR 72 dB(A): Infineon IM72D128V01
+# product brief, read 2026-11-02 (review finding, NSM-STM-001); its roll-off is not checked and is taken equal to the ICS-43434.
 REF_SPL = 94.0             # dB SPL reference for SNR and sensitivity
 CREST = 10.0               # dB, crest factor allowed for traffic, sirens and horns above the rms level
 ERR_LOW = 1.0              # dB, largest self-noise error accepted at the bottom of the range (uncorrected)
@@ -131,9 +132,16 @@ for dn in (-1.0, 1.0):
     tag("A2", f"ICS-43434 at 35 dBA, subtraction with self-noise off by {dn:+.0f} dB: reads {corr:.2f} dBA")
 tag("A3", f"Full scale of the ICS-43434: {REF_SPL - MICS['ICS-43434']['sens_dbfs']:.0f} dB SPL rms sine, "
           f"{REF_SPL - MICS['ICS-43434']['sens_dbfs'] + 3:.0f} dB peak")
+# A4 (review finding): the overload is on the unweighted signal, so the ceiling above is dB SPL (Z weighted). For a
+# traffic spectrum LZ exceeds LA by about 5 to 10 dB (assumed), which lowers the A-weighted ceiling by that much.
+LZ_LA = (5.0, 10.0)
+for name, r_ in rng.items():
+    tag("A4", f"{name}: unweighted ceiling {r_[3]:.0f} dB SPL is {r_[3] - LZ_LA[1]:.0f} to {r_[3] - LZ_LA[0]:.0f} dBA for a traffic spectrum "
+              f"(LZ minus LA {LZ_LA[0]:.0f} to {LZ_LA[1]:.0f} dB, assumed), against the 110 dBA target")
 ics, im = rng["ICS-43434"], rng["IM72D128"]
-res("R4", f"ICS-43434 {ics[1]:.1f} to {ics[3]:.0f} dBA; IM72D128 {im[1]:.1f} to {im[3]:.0f} dBA (AOP assumed)",
-    "35 to 110 dBA", "At risk (no margin at 35 dBA with ICS-43434; met with IM72D128)")
+res("R4", f"ICS-43434 {ics[1]:.1f} dBA to {ics[3]:.0f} dB SPL ({ics[3] - LZ_LA[1]:.0f} to {ics[3] - LZ_LA[0]:.0f} dBA for traffic); "
+          f"IM72D128 {im[1]:.1f} dBA to {im[3]:.0f} dB SPL ({im[3] - LZ_LA[1]:.0f} to {im[3] - LZ_LA[0]:.0f} dBA for traffic)",
+    "35 to 110 dBA", "At risk (ICS-43434 misses 110 dBA for traffic spectra and has no margin at 35 dBA; the IM72D128, fitted by default, meets 110 dBA unless LZ exceeds LA by more than 9 dB)")
 
 # ---------------------------------------------------------------- B. Frequency response (R5)
 print("\nB. Frequency response")
@@ -186,14 +194,20 @@ for fac in FACADES:
         worst_facade = max(worst_facade, pt, ln)
         out.append(f"lane {src:g} m: point +{pt:.1f}, line +{ln:.1f} dB")
     tag("C2", f"Facade {fac:g} m behind the microphone: " + "; ".join(out))
+# C2c (review finding): a street canyon adds the opposite facade (20 m across, lane 5 m from the microphone, path 35 m)
+far = FACADE_REFL * (5.0 / 35.0)
+canyon = db(10 ** (worst_facade / 10) + far)
+tag("C2c", f"Street canyon: opposite facade 20 m away adds a further energy share {far:.2f} of the direct; with the near facade at 1 m the bias is up to +{canyon:.1f} dB")
 budget = {"calibrator (94 dB, class 1)": 0.4, "microphone drift between checks": 0.5,
           "windscreen insertion loss after correction": 0.5, "frequency response residual (traffic spectrum)": 0.7,
           "facade and pole reflections after a site correction": 1.0}
 rss = math.sqrt(sum(v ** 2 for v in budget.values()))
 tag("C3", "Uncertainty budget (assumed standard values, dB): " + "; ".join(f"{k} {v}" for k, v in budget.items()))
 tag("C3b", f"Combined {rss:.2f} dB; expanded (k = 2) {2 * rss:.1f} dB against +/-2 dB; worst uncorrected facade bias +{worst_facade:.1f} dB")
-res("R3", f"Expanded uncertainty {2 * rss:.1f} dB (assumed terms); facade bias up to +{worst_facade:.1f} dB before a site correction",
-    "+/-2 dB from 40 to 100 dBA after field calibration", "At risk")
+rss_ref = math.sqrt(rss ** 2 + 0.5 ** 2)
+tag("C3c", f"Adding the class 1 reference meter itself (0.5 dB, assumed) gives {rss_ref:.2f} dB combined and {2 * rss_ref:.1f} dB expanded (review finding)")
+res("R3", f"Expanded uncertainty {2 * rss:.1f} dB (k = 2, assumed terms; {2 * rss_ref:.1f} dB with the reference meter); facade bias up to +{worst_facade:.1f} dB (+{canyon:.1f} dB in a street canyon) before a site correction",
+    "+/-2 dB from 40 to 100 dBA after field calibration", "Not met on paper (expanded uncertainty above the target on assumed terms; a site correction is TRL 4 work)")
 
 # ---------------------------------------------------------------- D. Processing and power (R7)
 print("\nD. Processing and power")

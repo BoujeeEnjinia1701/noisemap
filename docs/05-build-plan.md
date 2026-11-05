@@ -3,9 +3,9 @@ doc_id: NSM-BLD-001
 title: NoiseMap prototype build plan
 project: NoiseMap
 doc_type: Build plan
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-02'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
     date: '2026-10-02'
     author: Amish Chadha
     change: M12 pin assignment (pin 1 3.3 V, pin 3 ground, pins 2 and 4 UART) shown on the wiring diagram and in the cable step; 3.3 V port label added to step 12 and the hardware line; Figure 13 redrawn
+  - version: "0.4"
+    date: '2026-11-02'
+    author: Amish Chadha
+    change: Kit 1.9.1 upgrade; the pictures and sketches are drawn from the detailed model (cad/src/model.py components); PR-016 and PR-017 cross-referenced
 ---
 
 # NoiseMap prototype build plan
@@ -90,7 +94,7 @@ Make and check each component before the assembly step that needs it. Sizes are 
 
 *Figure 3. The pole sits in the V and touches both faces; the band goes round the pole and pulls it into the V.*
 
-The back face sits flat on the pole side of the FieldNode back plate, centred on the plate, one block on each band height (20 and 270 up from the plate's bottom edge). Two M4 x 12 countersunk screws go in from the box side of the plate into the tapped holes, with a drop of medium threadlocker. A 114 mm pole touches both V faces 40 mm each side of centre, about 13 mm in from the front face; poles from 60 to 140 mm also seat on both faces.
+The back face sits flat on the pole side of the FieldNode back plate, centred on the plate, one block on each band height (20 and 270 up from the plate's bottom edge). Two M4 x 12 countersunk screws go in from the box side of the plate into the tapped holes, with a drop of medium threadlocker. Each stainless screw or bolt that passes through or bears on aluminium gets a smear of neutral-cure silicone under the head and in the thread, or a nylon washer, so that salty water cannot sit in the joint (NSM-STM-001, S15). A 114 mm pole touches both V faces 40 mm each side of centre, about 13 mm in from the front face; poles from 60 to 140 mm also seat on both faces.
 
 ![Figure 4. Joint 2: the band through the rebate and the plate slot](05-build-plan/joint-02.png)
 
@@ -322,7 +326,7 @@ With a helper holding the core, sit the pole in both V-blocks. Pass each band ro
 
 Hold the saddle's V edges on the pole above the core, the arm pointing away from the core and the head upright; on the stub, the saddle's lower flange is about 60 above the top of the panel. Pass each band round the pole, through the two web slots and across the outside of the web. Turn the arm to face the street, check the head is upright with a level, and tighten both bands to the maker's torque.
 
-### Step 11: safety lanyard
+### Step 11: safety lanyard (PR-017)
 
 ![Step 11](05-build-plan/step-11.png)
 
@@ -359,7 +363,7 @@ Stop at each point. Carry on only when everything listed is true.
 - **S1. Before the cable is powered.** The head wiring is checked against Figure 13 with a meter; 3.3 V is on M12 pin 1 and ground on pin 3, and they are not swapped; the bench supply is limited to 100 mA. The FieldNode cell stays out until the FieldNode plan's own stops pass.
 - **S2. Before the node goes on the pole stub.** Every screw and bolt tight with its nyloc nut or threadlocker; edges deburred; all four bands through their slots. The stub is clamped in a stand that cannot tip under the node's 3.5 kg held 0.5 m off its axis.
 - **S3. Before any calibrator or loudspeaker test.** Hearing protection on; the calibrator's level is the 94 dB setting.
-- **S4. Before any outdoor installation (outside this plan).** The pole owner's written permission; a lift or a stable ladder with a second person; fall protection and traffic management; clear of overhead lines and the pole's electrical hatch; the owner has checked the pole can take about 96 N of added wind load 3.5 to 4 m up; the lanyard fitted; a public notice on the pole saying what is measured.
+- **S4. Before any outdoor installation (outside this plan).** The pole owner's written permission; a lift or a stable ladder with a second person; fall protection and traffic management; clear of overhead lines and the pole's electrical hatch; the owner has checked the pole can take about 96 N of added wind load 3.5 to 4 m up; the lanyard fitted; a public notice on the pole saying what is measured (PR-016).
 
 ## 7. Tools, skills and workspace
 

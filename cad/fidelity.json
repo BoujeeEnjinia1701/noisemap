@@ -1,0 +1,47 @@
+{
+ "level": "D3",
+ "stage": "P3",
+ "hash": "db77ab6b89cac0ad",
+ "options": {
+  "A": {
+   "title": "Pole clamp node, solar and LoRaWAN",
+   "parts": 89,
+   "made_or_bought": 43,
+   "fasteners": 46,
+   "welds": 0,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 3.5,
+   "step_files": 43
+  },
+  "B": {
+   "title": "Balcony post node, USB power and Wi-Fi",
+   "parts": 28,
+   "made_or_bought": 16,
+   "fasteners": 12,
+   "welds": 0,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 1.0,
+   "step_files": 0
+  },
+  "C": {
+   "title": "Luminaire socket node, luminaire power and LoRaWAN",
+   "parts": 24,
+   "made_or_bought": 16,
+   "fasteners": 8,
+   "welds": 0,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 0.2,
+   "step_files": 0
+  }
+ },
+ "failures": [],
+ "warnings": [],
+ "passed": true,
+ "seconds": 47.1
+}

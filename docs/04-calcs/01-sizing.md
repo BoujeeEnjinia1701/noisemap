@@ -3,9 +3,9 @@ doc_id: NSM-CAL-001
 title: NoiseMap sizing calculations
 project: NoiseMap
 doc_type: Calculation note
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-01'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,11 +21,15 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Mechanics, mass and cost re-run for the constructable design (NSM-DDR-003); FieldNode core at FND-CAL-001 v0.3; budget treated as a value-engineering target
+- version: "0.4"
+  date: '2026-11-02'
+  author: Amish Chadha
+  change: Independent review findings of NSM-STM-001 applied (unweighted overload ceiling in dBA, IM72D128 overload point from its product brief, street canyon, reference meter term); R3 restated as not met on paper; design unchanged
 ---
 
 # NoiseMap sizing calculations
 
-On paper, NoiseMap meets eight of its fifteen requirements (four by calculation, four by design), has three at risk, misses none and leaves four that only tests can settle. Under NSM-DDR-002 R10 is relaxed to 3.5 kg. With the design made constructable (NSM-DDR-003: sawn and drilled V-blocks, a bent sheet arm saddle with two bands, fixings throughout, and the FieldNode core without its small-pole V-blocks and bands), the node weighs **3.45 kg against 3.5 kg (R10)**, a margin of only 0.05 kg. An automatic interval rule at slow data rates brings R12 within fair use at every spreading factor. Energy is not a concern: the design load is 12.2 mW, 12 % of FieldNode's 100 mW allowance, which gives 53 days without sun and keeps the node in credit even on the hot clear days that stop FieldNode charging. The measuring range reaches 35 dBA with no margin on the ICS-43434 (34.9 dBA) and with 7 dB of margin on the IM72D128 (27.9 dBA), and tops out at 113 dBA. Accuracy (R3) is at risk: an assumed uncertainty budget gives ±2.9 dB, and a facade behind the pole can add up to 2.4 dB before a site correction. Under NSM-DDR-001 D1 the $100 `budget_usd` applies to the NoiseMap parts; it is a value-engineering target, not a limit. The constructable NoiseMap parts are estimated at $72.00, $28.00 under the target; the full node with the FieldNode core is $211.00.
+On paper, NoiseMap meets eight of its fifteen requirements (four by calculation, four by design), has two at risk (R4, R5), misses one on paper (R3, accuracy: the expanded uncertainty of 2.9 dB on assumed terms is above the 2 dB target) and leaves four that only tests can settle. Under NSM-DDR-002 R10 is relaxed to 3.5 kg. With the design made constructable (NSM-DDR-003: sawn and drilled V-blocks, a bent sheet arm saddle with two bands, fixings throughout, and the FieldNode core without its small-pole V-blocks and bands), the node weighs **3.45 kg against 3.5 kg (R10)**, a margin of only 0.05 kg. An automatic interval rule at slow data rates brings R12 within fair use at every spreading factor. Energy is not a concern: the design load is 12.2 mW, 12 % of FieldNode's 100 mW allowance, which gives 53 days without sun and keeps the node in credit even on the hot clear days that stop FieldNode charging. The measuring range reaches 35 dBA with no margin on the ICS-43434 (34.9 dBA) and with 7 dB of margin on the IM72D128 (27.9 dBA), and tops out at 113 dBA. Accuracy (R3) is at risk: an assumed uncertainty budget gives ±2.9 dB, and a facade behind the pole can add up to 2.4 dB before a site correction. Under NSM-DDR-001 D1 the $100 `budget_usd` applies to the NoiseMap parts; it is a value-engineering target, not a limit. The constructable NoiseMap parts are estimated at $72.00, $28.00 under the target; the full node with the FieldNode core is $211.00.
 
 Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the repo root: `python docs/04-calcs/sizing.py`), which also writes `docs/04-calcs/results.csv`. The tag in brackets, for example [A1], is the line of the script's output that carries the number. The script imports `PARAMS`, `derived()` and the part volumes from `cad/src/model.py`, reads `bom/bom.csv` and `budget_usd` in `project.yaml`, and takes FieldNode energy figures from FND-CAL-001 v0.1 and its mass from FND-CAL-001 v0.3.
 
@@ -38,7 +42,7 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 | Area | Assumption | Basis |
 | --- | --- | --- |
 | ICS-43434 | 65 dB SNR, sensitivity -26 dBFS at 94 dB SPL, 120 dB SPL overload, response 60 Hz to 20 kHz, listed end of life; supply 0.49 mA | TDK product page ([TDK InvenSense](https://invensense.tdk.com/products/ics-43434/)); current is a typical class value, not checked |
-| IM72D128 | 72 dB(A) SNR, PDM output, IP57 at part level; overload and roll-off taken equal to the ICS-43434; supply 1.0 mA | DNMS README ([DNMS](https://github.com/hbitter/DNMS)); overload, roll-off and current not checked |
+| IM72D128 | 72 dB(A) SNR, PDM output, IP57 at part level; acoustic overload point 126 dB SPL at 1 % THD; roll-off taken equal to the ICS-43434; supply 1.0 mA | DNMS README ([DNMS](https://github.com/hbitter/DNMS)); overload from the [Infineon IM72D128V01 product brief](https://www.infineon.com/content/dam/infineon/row/public/documents/24/45/infineon-mems-im72d128v01-productbrief-en.pdf) (read 2026-11-02); roll-off and current not checked |
 | Range criteria | Lower limit where self-noise adds 1 dB; 10 dB crest factor above the rms level for traffic, horns and sirens | Screening values |
 | Response limits | ±2.5 dB at 63 Hz and ±5 dB at 8 kHz, taken as the class 2 limits; low-frequency corner spread ±20 % | Approximate; the IEC 61672-1 table was not re-checked in this session |
 | Processing | 48 kHz; seven biquads (A 3, C 2, low-frequency equalizer 1, wind band 1) at 14 cycles each; four channels at 6 cycles; 10 cycles overhead; 48 MHz clock; 120 µA/MHz running, 1.6 mA asleep with DMA running | STM32L4 class typical figures; to confirm on the chosen board |
@@ -54,8 +58,8 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 
 - **Self-noise and lower limit.** The ICS-43434 has 29.0 dBA of self-noise, so a 35 dBA street reads 0.97 dB high; the 1 dB lower limit is **34.9 dBA**, with no margin on the 35 dBA target. The IM72D128 has 22.0 dBA of self-noise and a lower limit of **27.9 dBA** [A1].
 - **Noise-floor subtraction** helps only as far as the self-noise is known: with the ICS-43434 at 35 dBA, an error of ±1 dB in the stored self-noise leaves the result between 34.71 and 35.22 dBA [A2]. The adapter board of D3 lets a quiet-street node use the IM72D128.
-- **Upper limit.** The ICS-43434 reaches full scale at 120 dB SPL rms for a sine, 123 dB peak [A3]. With a 10 dB crest factor the highest rms level measured cleanly is **113 dB**, against the 110 dBA target. The TRL 2 figure of 115 dBA ignored crest factor. The IM72D128 overload point was not checked and is taken as the same.
-- **R4 is at risk** with the ICS-43434 and met on paper with the IM72D128.
+- **Upper limit.** The ICS-43434 reaches full scale at 120 dB SPL rms for a sine, 123 dB peak [A3]. With a 10 dB crest factor the highest rms level measured cleanly is **113 dB SPL**. That is an unweighted level: for a traffic spectrum, where the unweighted level exceeds the A-weighted level by about 5 to 10 dB (assumed), the ceiling is **103 to 108 dBA**, below the 110 dBA target [A4]. The TRL 2 figure of 115 dBA ignored crest factor. The IM72D128 has an overload point of 126 dB SPL at 1 % THD (Infineon product brief), giving **119 dB SPL, 109 to 114 dBA** for traffic [A4].
+- **R4 is at risk** with the ICS-43434 (no margin at 35 dBA and a ceiling below 110 dBA for traffic) and met on paper with the IM72D128 unless the unweighted level exceeds the A-weighted level by more than 9 dB. The IM72D128 is therefore the microphone fitted by default (a part choice on the existing dual-footprint adapter board, decided under Amish's standing instruction of 2026-10-23, NSM-DEC-001); the ICS-43434 stays an alternative.
 
 ## B. Frequency response (R5)
 
@@ -77,7 +81,7 @@ Every number in this note is printed by `docs/04-calcs/sizing.py` (run from the 
 | 5 m | +0.4 dB | +1.1 dB | +0.9 dB | +1.6 dB |
 | 10 m | +0.2 dB | +0.7 dB | +0.4 dB | +1.1 dB |
 
-- **Uncertainty budget.** With assumed standard uncertainties of 0.4 dB for the calibrator, 0.5 dB for drift between checks, 0.5 dB for the windscreen, 0.7 dB for the response residual and 1.0 dB for reflections after a site correction, the combined value is 1.47 dB and the expanded value (k = 2) **2.9 dB** against ±2 dB [C3], [C3b]. **R3 is at risk.** The side-by-side comparison of D7 is what sets the site correction; only it can show whether R3 is met.
+- **Uncertainty budget.** With assumed standard uncertainties of 0.4 dB for the calibrator, 0.5 dB for drift between checks, 0.5 dB for the windscreen, 0.7 dB for the response residual and 1.0 dB for reflections after a site correction, the combined value is 1.47 dB and the expanded value (k = 2) **2.9 dB** against ±2 dB [C3], [C3b]. A street canyon adds the opposite facade: up to +2.7 dB [C2c]. Adding the class 1 reference meter's own uncertainty (0.5 dB, assumed) raises the expanded value to 3.1 dB [C3c]. **R3 is not met on paper**: the expanded uncertainty is above the target on assumed terms. Relaxing the target or reducing the terms is Amish's decision (NSM-DEC-001). The side-by-side comparison of D7 is what sets the site correction; only it can show whether R3 is met.
 
 ## D. Processing and power (R7)
 
@@ -139,8 +143,8 @@ The BOM has 14 lines, all priced. Lines 1 to 6, the FieldNode core, total $139.0
 
 | ID | Requirement | Value | Target | Status |
 | --- | --- | --- | --- | --- |
-| R3 | Accuracy | Expanded uncertainty 2.9 dB (assumed terms); facade bias up to +2.4 dB before site correction | ±2 dB, 40 to 100 dBA | **At risk** |
-| R4 | Measuring range | ICS-43434 34.9 to 113 dBA; IM72D128 27.9 to 113 dBA | 35 to 110 dBA | **At risk** (no margin with ICS-43434) |
+| R3 | Accuracy | Expanded uncertainty 2.9 dB (assumed terms; 3.1 dB with the reference meter); facade bias up to +2.4 dB (+2.7 dB in a canyon) before site correction | ±2 dB, 40 to 100 dBA | **Not met on paper** |
+| R4 | Measuring range | ICS-43434 34.9 dBA to 113 dB SPL (103 to 108 dBA for traffic); IM72D128 27.9 dBA to 119 dB SPL (109 to 114 dBA) | 35 to 110 dBA | **At risk** (ICS-43434; the IM72D128 is fitted by default) |
 | R5 | Frequency weighting | -2.8 dB at 63 Hz before equalizing, ±0.8 dB after; port resonance 36 kHz | Class 2 limits, 63 Hz to 8 kHz | **At risk** (membrane, windscreen, head) |
 | R8 | Ingress and weather | FieldNode IP65; head skirt, membrane, bored windscreen | IP65; driving rain; -20 to +50 °C | Not verifiable at TRL 3 |
 | R9 | Calibration check | Calibrator fits the head with the windscreen off; offset stored in the head | 10 min or less | Not verifiable at TRL 3 |
@@ -155,7 +159,7 @@ The BOM has 14 lines, all priced. Lines 1 to 6, the FieldNode core, total $139.0
 | R6 | Time stamps | LoRaWAN network time | Within 2 s of UTC | Met by design |
 | R15 | Openness | Repo licenses; method and format here | All published | Met by design |
 
-Counts [L2]: 0 not met, 3 at risk, 4 not verifiable at TRL 3, 4 met on paper, 4 met by design.
+Counts [L2]: 1 not met, 2 at risk, 4 not verifiable at TRL 3, 4 met on paper, 4 met by design.
 
 ## Checks against the TRL 2 figures
 

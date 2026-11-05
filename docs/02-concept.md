@@ -3,9 +3,9 @@ doc_id: NSM-PRC-001
 title: NoiseMap design precis
 project: NoiseMap
 doc_type: Design precis
-version: "0.6"
+version: "0.7"
 status: Draft
-date: '2026-10-02'
+date: '2026-11-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -33,11 +33,15 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: M12 pinout and first co-design partner to approach, decided on 2026-10-02 (NSM-DEC-001)
+- version: "0.7"
+  date: '2026-11-02'
+  author: Amish Chadha
+  change: 'Kit 1.9.1 upgrade: the model is rebuilt at detail level D3 (89 parts, 3.45 kg); concept options and STEM check linked; design unchanged'
 ---
 
 # NoiseMap design precis
 
-NoiseMap is a clamp-on street pole noise node. A digital MEMS microphone 4.0 m above the sidewalk feeds a small processor in the microphone head, which turns the sound into A- and C-weighted levels once a second and overwrites the audio within milliseconds. Only levels cross the cable to a standard FieldNode core, which sends a 22-byte record every 15 minutes over LoRaWAN. The TRL 3 calculations (NSM-CAL-001) give a design load of 12.2 mW, 53 days without sun and a range of 34.9 to 113 dBA (27.9 dBA with the IM72D128 microphone). The NoiseMap parts are estimated at $72.00 against a $100 value-engineering target, which covers them alone; a full node with the $139.00 FieldNode core is $211.00. Made constructable under NSM-DDR-003, the node weighs 3.45 kg, within R10's 3.5 kg (relaxed from 3 kg under NSM-DDR-002). How to build it is in the prototype build plan, NSM-BLD-001.
+NoiseMap is a clamp-on street pole noise node. A digital MEMS microphone 4.0 m above the sidewalk feeds a small processor in the microphone head, which turns the sound into A- and C-weighted levels once a second and overwrites the audio within milliseconds. Only levels cross the cable to a standard FieldNode core, which sends a 22-byte record every 15 minutes over LoRaWAN. The TRL 3 calculations (NSM-CAL-001) give a design load of 12.2 mW, 53 days without sun and a range of 27.9 dBA to 119 dB SPL with the IM72D128 microphone fitted by default (34.9 dBA to 113 dB SPL with the ICS-43434). The NoiseMap parts are estimated at $72.00 against a $100 value-engineering target, which covers them alone; a full node with the $139.00 FieldNode core is $211.00. Made constructable under NSM-DDR-003, the node weighs 3.45 kg, within R10's 3.5 kg (relaxed from 3 kg under NSM-DDR-002). How to build it is in the prototype build plan, NSM-BLD-001. This design is option A of the concept options (NSM-OPT-001); the STEM check is NSM-STM-001.
 
 ![Figure 1. NoiseMap on a street pole with a 1.75 m person for scale](../media/hero.png)
 
@@ -88,10 +92,10 @@ Table 2. Key numbers.
 | Quantity | Value | Requirement |
 | --- | --- | --- |
 | Microphone self-noise | 29.0 dBA (ICS-43434); 22.0 dBA (IM72D128) | |
-| Measuring range | 34.9 to 113 dBA (ICS-43434); 27.9 to 113 dBA (IM72D128) | R4 at risk |
+| Measuring range | 34.9 dBA to 113 dB SPL (ICS-43434, 103 to 108 dBA for traffic); 27.9 dBA to 119 dB SPL (IM72D128, 109 to 114 dBA) | R4 at risk; IM72D128 fitted by default |
 | Response at 63 Hz | -2.8 dB before equalizing; ±0.8 dB after, with ±20 % corner spread | R5 at risk |
 | Acoustic port resonance | 36.2 kHz; +0.44 dB at 8 kHz | R5 |
-| Expanded uncertainty | 2.9 dB on assumed terms; facade bias up to 2.4 dB | R3 at risk |
+| Expanded uncertainty | 2.9 dB on assumed terms; facade bias up to 2.4 dB | R3 not met on paper |
 | Processor | 132 cycles per sample, 13.2 % of 48 MHz, 2.15 mA | |
 | Node load from the cell | 12.2 mW, 0.29 Wh/day (22.6 mW upper bound) | 12 % of FieldNode's 100 mW allowance |
 | Harvest at 1.5 peak sun hours | 5.81 Wh/day stored | R7 met on paper |
@@ -123,7 +127,7 @@ All of these are decided by Amish, 2026-09-25: go with recommendation (NSM-DDR-0
 
 ## Safety
 
-> **Safety:** Installing on a street pole is work at height next to traffic. Install only with the pole owner's permission, by trained crews, with fall protection and traffic management as local rules require. Keep clear of overhead power lines and street-light wiring, and never open a pole's electrical hatch. The node adds about 97 N of wind load at 3.5 to 4 m in a 35 m/s gust; the pole owner should confirm the pole can take it.
+> **Safety:** Installing on a street pole is work at height next to traffic. Install only with the pole owner's permission, by trained crews, with fall protection and traffic management as local rules require. Keep clear of overhead power lines and street-light wiring, and never open a pole's electrical hatch. The node adds about 96 N of wind load at 3.5 to 4 m in a 35 m/s gust; the pole owner should confirm the pole can take it.
 
 > **Safety:** The node contains a LiFePO4 cell of about 19 Wh. Fuse the cell, charge only within the cell maker's temperature limits (FieldNode's cold-charge lockout applies), and do not install a node with a swollen or damaged cell.
 

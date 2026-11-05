@@ -22,6 +22,19 @@ from build_views import Part  # noqa: E402
 from model import PARAMS as P, build_components, derived, pole, patch_svg_export, zcyl  # noqa: E402
 
 patch_svg_export()
+
+
+_component_sheet = bv.component_sheet
+
+
+def _tilted_sheet(part, neighbours, *args, view_shape=None, **kw):
+    """Draw the making sketch views 0.006 degrees off-axis, so the hidden-line projection of a part with many
+    tangent faces does not stall (the tilt changes no printed dimension)."""
+    from build123d import Rot
+    return _component_sheet(part, neighbours, *args, view_shape=Rot(0.006, 0.006, 0) * (view_shape if view_shape is not None else part.shape), **kw)
+
+
+bv.component_sheet = _tilted_sheet
 OUT = ROOT / "docs" / "05-build-plan"
 DWG = ROOT / "cad" / "drawings"
 DATE = "2026-10-01"

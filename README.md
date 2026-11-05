@@ -8,7 +8,7 @@ A sound level meter node that records decibel levels only, never audio, to map t
 
 ![NoiseMap: street pole sound level meter that records decibels only, never audio, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement NSM-DWG-001 (PDF)](cad/drawings/NSM-DWG-001.pdf) · [Calculations NSM-CAL-001](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Studio render](media/render-node.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [Exploded view](media/exploded.png) · [General arrangement NSM-DWG-001 (PDF)](cad/drawings/NSM-DWG-001.pdf) · [STEM check](docs/01b-stem-check.md) · [Concept options](docs/02a-concept-options.md) · [Requirements](docs/03-requirements.md) · [Traceability](docs/03b-traceability.md) · [Calculations NSM-CAL-001](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -60,7 +60,19 @@ A sound level meter node that records decibel levels only, never audio, to map t
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md)
 
-TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 34.9 to 113 dBA (27.9 dBA at the low end with the IM72D128 microphone), a 22-byte record every 15 minutes, an estimated $72 of NoiseMap parts against a $100 value-engineering target and about $211 for a full node with the FieldNode core. Made constructable (sawn V-blocks, a bent sheet arm saddle with two bands, fixings throughout), the node weighs 3.45 kg, within the 3.5 kg of R10 (relaxed from 3 kg), and an automatic interval rule keeps airtime within fair use at slow data rates; accuracy, measuring range and frequency response remain at risk. See the [requirements](docs/03-requirements.md) and the decision records [NSM-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [NSM-DDR-002](docs/decisions/0002-recommendations-accepted.md) and [NSM-DDR-003](docs/decisions/0003-design-for-construction.md).
+TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates): 12.2 mW average draw, 53 days without sun on the standard FieldNode cell, a measuring range of 27.9 dBA to 119 dB SPL with the IM72D128 microphone fitted by default (34.9 dBA to 113 dB SPL with the ICS-43434, which is only 103 to 108 dBA for traffic), a 22-byte record every 15 minutes, an estimated $72 of NoiseMap parts against a $100 value-engineering target and about $211 for a full node with the FieldNode core. Made constructable (sawn V-blocks, a bent sheet arm saddle with two bands, fixings throughout), the node weighs 3.45 kg, within the 3.5 kg of R10 (relaxed from 3 kg), and an automatic interval rule keeps airtime within fair use at slow data rates; accuracy, measuring range and frequency response remain at risk. See the [requirements](docs/03-requirements.md) and the decision records [NSM-DDR-001](docs/decisions/0001-trl2-review-decisions.md), [NSM-DDR-002](docs/decisions/0002-recommendations-accepted.md) and [NSM-DDR-003](docs/decisions/0003-design-for-construction.md).
+
+**Status at TRL 3 (on paper):** of 17 product requirements, 9 are met (4 on paper, 5 by design), 2 are at risk (measuring range and frequency response, PR-004 and PR-005), 1 is not met on paper (total uncertainty, PR-003: 2.9 to 3.1 dB against a 2 dB target) and 5 are to verify at TRL 4. Nothing has been built or tested; TRL 4 is on hold.
+
+## STEM check
+
+Every physical, chemical and biological claim of the three concept options was checked against known science ([NSM-STM-001](docs/01b-stem-check.md)): 24 claims, 21 within known science, 3 plausible (the loudest level the microphone can take, the mass margin and street-canyon reflections) and none failing. An independent reviewer who saw only the checks and the calculation note tried to refute every verdict. Two problems were fixed under Amish's standing instruction of 2026-10-23: the microphone clipped at 113 dB SPL, which is only 103 to 108 dBA for traffic, so the Infineon IM72D128 (126 dB SPL overload point) is now fitted by default, and stainless fixings that touch aluminium are sealed against road-salt corrosion. Two findings change targets and go to Amish: PR-003 is not met on paper, and PR-002 and PR-012 hold by design only at LoRaWAN spreading factors 7 to 9.
+
+## Concept options
+
+Three working principles were modelled in detail and scored against the user requirements ([NSM-OPT-001](docs/02a-concept-options.md)): **A, pole clamp node** (the current design, 89 parts, 3.5 kg), **B, balcony post node** (USB power and Wi-Fi, 28 parts, 1.0 kg) and **C, luminaire socket node** (power and LoRaWAN from the streetlight, 24 parts, 0.2 kg). A scores 171, B 163 and C 152. A and B are within 10 %, so **both go to Amish; the choice is proposed, awaiting Amish** ([NSM-DDR-004](docs/decisions/0004-concept-selection.md)). The current design, option A, stays the design of record.
+
+![Concept options at one scale](media/options.png)
 
 ## Key components
 
@@ -70,7 +82,7 @@ TRL 3 calculations ([NSM-CAL-001](docs/04-calcs/01-sizing.md), paper estimates):
 - 90 mm foam windscreen with bird spike
 - Aluminum arm on a bent sheet saddle with its own two band clamps, and street pole V-blocks for 60 to 140 mm poles that fit the FieldNode back plate; no drilling of the pole
 
-The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric model is [cad/src/model.py](cad/src/model.py), with STEP files in `cad/step/`.
+The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric model is [cad/src/model.py](cad/src/model.py) (kit 1.9 interface, `components(option)` for each option, detail level D3: real stock, every screw, nut and band, edge breaks; `cad/fidelity.json`), with STEP files in `cad/step/` (a file per part of option A and an assembly per option) and STL in `cad/stl/`.
 
 ## Building the prototype
 
@@ -88,10 +100,10 @@ The [prototype build plan](docs/05-build-plan.md) (NSM-BLD-001) shows how to mak
 
 | Folder | Contents |
 | --- | --- |
-| `docs/` | Problem, concept, requirements, calculations and design decisions |
-| `cad/src/` | build123d Python source, the source of truth for all geometry |
-| `cad/step/`, `cad/stl/` | Exported models for FreeCAD, other CAD tools and printing |
-| `cad/drawings/` | 2D sketches and dimensioned drawings |
+| `docs/` | Problem, STEM check, concept and concept options, user and product requirements, traceability, calculations, build plan, design decisions, regulatory, feasibility, risk, market and plan |
+| `cad/src/` | build123d Python source, the source of truth for all geometry: `model.py` (kit 1.9 interface), option parts (`nsm_parts.py`, `nsm_options.py`), product appearance model (`product_model.py`), drawing sheet (`sheets.py`), STL export (`export_stl.py`), concept media and build plan pictures |
+| `cad/step/`, `cad/stl/` | STEP per part of option A (`cad/step/A/`) and an assembly per option; STL assemblies and printed parts for FreeCAD, other CAD tools and printing |
+| `cad/drawings/` | General arrangement NSM-DWG-001 Rev P5 and the making sketches NSM-DWG-101 to 106 |
 | `bom/` | Bill of materials |
 | `electronics/` | KiCad schematics and PCB layouts |
 | `firmware/` | Microcontroller code |
@@ -100,7 +112,26 @@ The [prototype build plan](docs/05-build-plan.md) (NSM-BLD-001) shows how to mak
 
 ## Documentation
 
-Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (NSM-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `NSM-PRC-001/v1.0`.
+| Document | ID |
+| --- | --- |
+| [Problem statement](docs/01-problem.md) | NSM-PRB-001 |
+| [STEM check](docs/01b-stem-check.md) | NSM-STM-001 |
+| [Design precis](docs/02-concept.md) | NSM-PRC-001 |
+| [Concept options](docs/02a-concept-options.md) | NSM-OPT-001 |
+| [User requirements](docs/03a-user-requirements.md) | NSM-URS-001 |
+| [Product requirements and specifications](docs/03-requirements.md) | NSM-PRS-001 |
+| [Traceability matrix](docs/03b-traceability.md) | NSM-RTM-001 |
+| [Calculation note](docs/04-calcs/01-sizing.md) | NSM-CAL-001 |
+| [Prototype build plan](docs/05-build-plan.md) | NSM-BLD-001 |
+| [Design decisions register](docs/06-design-decisions.md) | NSM-DEC-001 |
+| [Concept selection](docs/decisions/0004-concept-selection.md) | NSM-DDR-004 |
+| [Regulatory and standards register](docs/07-regulatory.md) | NSM-REG-001 |
+| [Feasibility](docs/08-feasibility.md) | NSM-FEA-001 |
+| [Risk register, hazard analysis and design FMEA](docs/09-risk.md) | NSM-RSK-001 |
+| [Market and viability](docs/10-market.md) | NSM-MKT-001 |
+| [Project plan](docs/11-plan.md) | NSM-PLN-001 |
+
+Earlier decision records are in `docs/decisions/` (NSM-DDR-001 to NSM-DDR-003). Pipeline stage: P3 of P0 to P6 (the portfolio cap). Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID, a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `NSM-PRC-001/v1.0`; run `python .kit/render.py --check` to validate.
 
 ## Credits
 
